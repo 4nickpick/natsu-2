@@ -1,8 +1,8 @@
 extends KinematicBody2D
 
 var health = 2
-var speed = 200
-var velocity = Vector2(-150, 0)
+var speed = 0 #150
+var velocity = Vector2(0, 0) #Vector2(-1, 0)
 
 const Echo = preload("res://scenes/projectiles/Echo.tscn")
 	
@@ -11,12 +11,14 @@ func shoot():
 	b.set_origin("enemies")
 	get_parent().add_child(b)
 	b.global_position = $ProjectileSpawner.global_position
-	b.velocity = Vector2(-1, 0)
+	b.activeVelocity = Vector2(-1, 0)
 	b.speed = 1000
+	b.active = true
 		
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	velocity = velocity.normalized() * speed
 	pass # Replace with function body.
 	
 func _process(_delta):
@@ -53,7 +55,8 @@ func _on_AnimatedSprite_animation_finished():
 
 
 func _on_CooldownTimer_timeout():
-	shoot()
+#	shoot()
+	pass
 
 
 func _on_Area2D_area_entered(area):

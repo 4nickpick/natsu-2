@@ -4,7 +4,6 @@ var eyeball = preload("res://scenes/actors/Enemy.tscn")
 var score = 0
 var fps = 0
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
@@ -38,6 +37,7 @@ func _on_EnemySpawner_timeout():
 	enemy.global_position = position
 	add_child(enemy)
 	enemy.add_to_group("enemies")
+	pass
 
 func _on_Player_died():
 	$HUD.update_health($Player.health)

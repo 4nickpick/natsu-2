@@ -23,7 +23,7 @@ script = ExtResource( 2 )
 frames = SubResource( 1 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2( -7.62939e-06, 3.18198 )
+position = Vector2( -0.31498, 3.18198 )
 shape = SubResource( 2 )
 
 [node name="VisibilityEnabler2D" type="VisibilityEnabler2D" parent="."]

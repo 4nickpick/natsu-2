@@ -20,12 +20,17 @@ var shieldState = ShieldState.INACTIVE
 # charge shot
 var charge = 0
 var chargeBuildRate = 100
+var chargeMultiplier = 100
+
+# heat seeking
+var heatSeekingIndex = 0
 
 var currentBullet = null # bullet before its released
+var bullets = []
 
 var abilities = [
 	Abilities.SHIELD,
-#	Abilities.CHARGE_SHOT,
+	Abilities.CHARGE_SHOT,
 	Abilities.HEAT_SEEKING
 ]
 
@@ -82,17 +87,13 @@ func get_input(delta):
 	velocity = velocity.normalized() * speed
 	
 	if Input.is_action_just_pressed("player_action1"):
-		if $ProjectileSpawner/CooldownTimer.is_stopped() and currentBullet == null:
-			construct_current_bullet()
+		construct_current_bullet()
 				
 	if Input.is_action_just_released("player_action1"):
-		if $ProjectileSpawner/CooldownTimer.is_stopped():
-			$ProjectileSpawner/CooldownTimer.start()
-			shoot()
+		shoot()
 	elif Input.is_action_pressed("player_action1"):
 		if abilities.find(Abilities.CHARGE_SHOT):
-			if $ProjectileSpawner/CooldownTimer.is_stopped():
-				build_charge(delta)
+			build_charge(delta)
 		
 	if abilities.find(Abilities.SHIELD) > -1:
 		if Input.is_action_pressed("player_action2"):
@@ -104,44 +105,86 @@ func get_input(delta):
 		elif shieldState != ShieldState.INACTIVE and $Shield/PerfectDetectionTimer.is_stopped() and $Shield/PerfectCooldownTimer.is_stopped():
 			setShieldState(ShieldState.INACTIVE)
 			state = State.DEFAULT
+			
 	
+	if abilities.find(Abilities.HEAT_SEEKING) > -1 and currentBullet:
+		var startingHeatSeekingIndex = heatSeekingIndex
+		var enemies = get_tree().get_nodes_in_group("enemies")
+		enemies.sort_custom(self, "sort_enemies")
+		if enemies.size() > 0 and currentBullet.heat_seeking: 
+			if(Input.is_action_just_released("player_reticle_control_wheel_up")
+					or Input.is_action_just_pressed("player_reticle_control_up")):
+				heatSeekingIndex += 1
+				if heatSeekingIndex > enemies.size() - 1:
+					heatSeekingIndex = 0
+				
+			if(Input.is_action_just_released("player_reticle_control_wheel_down")
+					or Input.is_action_just_pressed("player_reticle_control_down")):
+				heatSeekingIndex -= 1
+				if heatSeekingIndex < 0:
+					heatSeekingIndex = enemies.size() - 1
+			
+			if heatSeekingIndex != startingHeatSeekingIndex:
+				currentBullet.set_heat_seeking(enemies[heatSeekingIndex])
 	
 func construct_current_bullet():
 	currentBullet = Echo.instance()
 	currentBullet.set_origin("player")
-#	currentBullet.position = Vector2($ProjectileSpawner/, $ProjectileSpawner.transform.y)
+	currentBullet.global_position = $ProjectileSpawner.global_position
 	currentBullet.passiveVelocity = Vector2(0, 0)
 	currentBullet.activeVelocity = Vector2(1, 0)
-	add_child(currentBullet)
+	owner.add_child(currentBullet)
+	
+	if abilities.find(Abilities.HEAT_SEEKING) > -1:
+		var enemies = get_tree().get_nodes_in_group("enemies")
+		if enemies.size() > 0:
+			enemies.sort_custom(self, "sort_enemies")
+			print(enemies)
+			currentBullet.set_heat_seeking(enemies[0])
+		
 	
 func update_current_bullet():
-	if abilities.find(Abilities.CHARGE_SHOT) > -1:
+	if abilities.find(Abilities.CHARGE_SHOT) > -1 and currentBullet:
 		if charge > 0:
-			var multiplier = (charge / 100.0) + 1 
-			currentBullet.damage *= multiplier
-			currentBullet.scale *= multiplier 
+			chargeMultiplier = (charge / 100.0) + 1 
+			currentBullet.scale = Vector2(chargeMultiplier, chargeMultiplier) 
+			
+		if not currentBullet.active or currentBullet.is_missile: 
+			currentBullet.global_position = $ProjectileSpawner.global_position
 	
 	
 func shoot():
-	if abilities.find(Abilities.CHARGE_SHOT) > -1:
+	if abilities.find(Abilities.CHARGE_SHOT) > -1 and currentBullet:
 		if charge == 100:
 			currentBullet.invincible = true
-			currentBullet.velocity *= 1.4
+			currentBullet.activeVelocity *= 1.4
 			
+		currentBullet.damage *= chargeMultiplier	
 		charge = 0
 		emit_signal("charge_changed")
-	
-#	if abilities.find(Abilities.HEAT_SEEKING):
-		# find default target
-#		currentBullet.set_heat_seeking(null)
+		
+	if abilities.find(Abilities.HEAT_SEEKING) > -1:
+		heatSeekingIndex = 0
 		
 	# release the bullet	
-	remove_child(currentBullet)
-	owner.add_child(currentBullet)
-	currentBullet.global_position = $ProjectileSpawner.global_position
-	
-#	currentBullet = null
+	if currentBullet: 
+		currentBullet.active = true
+		bullets.push_back(currentBullet) 
+		currentBullet = null
 		
+		
+func sort_enemies(a, b):
+	if a.global_position.x <= global_position.x and b.global_position.x > global_position.x:
+		return false
+		
+	if a.global_position.x > global_position.x and b.global_position.x <= global_position.x:
+		return true
+		
+	if(a.global_position.x < b.global_position.x):
+		return true
+		
+	return false
+	
 		
 func adjust_shield_charge(delta):
 	var shieldCurrent = shield
@@ -169,8 +212,8 @@ func build_charge(delta):
 		
 	charge = clamp(charge, 0, 100)
 	
-	if charge != startingCharge:
-		emit_signal("charge_changed")
+#	if charge != startingCharge:
+#		emit_signal("charge_changed")
 	
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -296,4 +339,4 @@ func _on_PerfectCooldownTimer_timeout():
 		setShieldState(ShieldState.ACTIVE)
 	else:
 		setShieldState(ShieldState.INACTIVE)
-	
+		

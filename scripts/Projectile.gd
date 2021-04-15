@@ -1,9 +1,12 @@
 extends Area2D 
 
+const Reticle = preload("res://scenes/projectiles/Reticle.tscn")
+
 var speed = 800
 var rotation_speed = 25
 var cooldown = .1
 var damage = 1
+var is_missile = false
 
  # projectiles start out as non-moving for charge shots
 var passiveVelocity = Vector2(0, 0)
@@ -12,26 +15,30 @@ var passiveVelocity = Vector2(0, 0)
 # can be modified while the projectile is charging 
 var activeVelocity = Vector2(1, 0) 
 
+var active = false
+
 var invincible = false # is projectile destroyed on collision?
 
 var heat_seeking = false # alter direction to target nearest enemies
 var heat_seeking_target = null #heat_seeking target
+var reticle = null
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	activeVelocity = activeVelocity.normalized() * speed
+	activeVelocity = activeVelocity.normalized() 
 	pass # Replace with function body.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
 	rotation += rotation_speed * delta
-	position += activeVelocity * speed * delta
+	if active: 
+		position += activeVelocity * speed * delta
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta):
+func _process(delta):
 	
 	if heat_seeking:
-		activeVelocity = activeVelocity
+		update_heat_seeking(delta)
 	
 	pass
 	
@@ -39,6 +46,28 @@ func set_heat_seeking(target):
 	heat_seeking = true
 	heat_seeking_target = target
 	
+	if reticle != null:
+		reticle.queue_free()
+		
+	reticle = Reticle.instance()
+	get_parent().add_child(reticle)
+	reticle.global_position = target.global_position
+
+func update_heat_seeking(delta):
+	if active and reticle != null:
+		reticle.queue_free()
+		
+	if heat_seeking_target == null and reticle != null:
+		reticle.queue_free()
+	
+	if reticle != null and heat_seeking_target != null:
+		reticle.global_position = heat_seeking_target.global_position
+		
+	if active and heat_seeking_target != null and heat_seeking_target.health > 0:
+		var vectorToTarget = heat_seeking_target.global_position - global_position 
+		activeVelocity = vectorToTarget.normalized() * speed * delta * 4 # x4 cause it feels sluggish otherwise
+	
+
 func set_origin(origin):
 	if origin == "player":
 		set_collision_layer(4) #player_projectiles
