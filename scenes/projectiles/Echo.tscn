@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scenes/projectiles/Projectile.tscn" type="PackedScene" id=1]
+
+[node name="Echo" instance=ExtResource( 1 )]
+position = Vector2( 2.37842, -0.594605 )
+scale = Vector2( 0.75, 0.75 )
