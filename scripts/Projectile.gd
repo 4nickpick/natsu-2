@@ -43,15 +43,16 @@ func _process(delta):
 	pass
 	
 func set_heat_seeking(target):
-	heat_seeking = true
+	heat_seeking = target != null
 	heat_seeking_target = target
 	
 	if reticle != null:
 		reticle.queue_free()
 		
-	reticle = Reticle.instance()
-	get_parent().add_child(reticle)
-	reticle.global_position = target.global_position
+	if target != null:
+		reticle = Reticle.instance()
+		get_parent().add_child(reticle)
+		reticle.global_position = target.global_position
 
 func update_heat_seeking(delta):
 	if active and reticle != null:
@@ -92,9 +93,18 @@ func reflect(origin):
 	activeVelocity = -1 * activeVelocity 
 	damage *= 2
 	
+	
+func copy():
+	var copied = duplicate(8)
+	copied.active = true
+	return copied
+	
 func destroy():
 	if not invincible or not $VisibilityEnabler2D.is_on_screen():
 		queue_free()
+		
+		if reticle != null:
+			reticle.queue_free()
 	
 func _on_VisibilityEnabler2D_screen_exited():
 	destroy()

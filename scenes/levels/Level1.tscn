@@ -106,21 +106,7 @@ shape = SubResource( 6 )
 
 [node name="EnemySpawnTimer" type="Timer" parent="EnemySpawner"]
 wait_time = 3.0
-
-[node name="Enemy" parent="." groups=[
-"enemies",
-] instance=ExtResource( 6 )]
-position = Vector2( 627.202, 258.509 )
-
-[node name="Enemy2" parent="." groups=[
-"enemies",
-] instance=ExtResource( 6 )]
-position = Vector2( 845.451, 614.489 )
-
-[node name="Enemy3" parent="." groups=[
-"enemies",
-] instance=ExtResource( 6 )]
-position = Vector2( 1074.3, 385.644 )
+autostart = true
 
 [node name="Enemy4" parent="." groups=[
 "enemies",
@@ -129,6 +115,7 @@ position = Vector2( 177.99, 355.98 )
 [connection signal="charge_changed" from="Player" to="." method="_on_Player_charge_changed"]
 [connection signal="died" from="Player" to="." method="_on_Player_died"]
 [connection signal="health_changed" from="Player" to="." method="_on_Player_health_changed"]
+[connection signal="powerup_changed" from="Player" to="." method="_on_Player_powerup_changed"]
 [connection signal="shield_changed" from="Player" to="." method="_on_Player_shield_changed"]
 [connection signal="shield_state_changed" from="Player" to="." method="_on_Player_shield_state_changed"]
 [connection signal="timeout" from="EnemySpawner/EnemySpawnTimer" to="." method="_on_EnemySpawner_timeout"]

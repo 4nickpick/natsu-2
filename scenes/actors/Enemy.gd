@@ -1,10 +1,11 @@
 extends KinematicBody2D
 
 var health = 2
-var speed = 0 #150
-var velocity = Vector2(0, 0) #Vector2(-1, 0)
+var speed = 150
+var velocity = Vector2(-1, 0)
 
 const Echo = preload("res://scenes/projectiles/Echo.tscn")
+const Powerup = preload("res://scenes/powerups/Powerup.tscn")
 	
 func shoot():
 	var b = Echo.instance()
@@ -18,6 +19,7 @@ func shoot():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	randomize()
 	velocity = velocity.normalized() * speed
 	pass # Replace with function body.
 	
@@ -51,7 +53,15 @@ func kill():
 
 func _on_AnimatedSprite_animation_finished():
 	if $AnimatedSprite.animation == "dead":
+		
+		var powerup = Powerup.instance()
+		powerup.global_position = global_position
+		get_parent().add_child(powerup)
+		
 		destroy()
+		
+			
+			
 
 
 func _on_CooldownTimer_timeout():

@@ -19,7 +19,7 @@ func _process(_delta):
 		get_tree().change_scene("res://scenes/levels/Level1.tscn") 
 	
 	$HUD.update_score(score)
-	$HUD.update_enemy_count(get_tree().get_nodes_in_group("player_projectiles").size())
+#	$HUD.update_enemy_count(get_tree().get_nodes_in_group("player_projectiles").size())
 #	$HUD.update_enemy_count(get_tree().get_nodes_in_group("enemies").size())
 	
 	
@@ -57,4 +57,9 @@ func _on_Player_shield_changed():
 	pass
 
 func _on_Player_charge_changed():
-	$HUD.update_enemy_count("%.2f" % $Player.charge)
+#	$HUD.update_enemy_count("%.2f" % $Player.charge)
+	pass
+
+
+func _on_Player_powerup_changed():
+	$HUD.update_enemy_count(str($Player.powerup))

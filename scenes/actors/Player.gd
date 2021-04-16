@@ -4,6 +4,7 @@ signal shield_state_changed
 signal charge_changed
 signal shield_changed
 signal health_changed
+signal powerup_changed
 signal died
 
 var speed = 400
@@ -15,12 +16,12 @@ var shield = 100
 var shieldDepletionRate = 50
 var shieldRestorationRate = 50
 var state = State.DEFAULT
-var shieldState = ShieldState.INACTIVE
+var shieldState = null
 
 # charge shot
 var charge = 0
 var chargeBuildRate = 100
-var chargeMultiplier = 100
+var chargeMultiplier = 1
 
 # heat seeking
 var heatSeekingIndex = 0
@@ -34,21 +35,19 @@ var abilities = [
 	Abilities.HEAT_SEEKING
 ]
 
-var powerup = null 
+var powerup = PowerUps.BURST
 
 enum Abilities {
 	CHARGE_SHOT = 0,
 	SHIELD = 1,
 	HEAT_SEEKING = 2,
-	BURST = 3,
-	HYPER = 4,
-	MISSILE = 5
+	MISSILE = 4 # splash
 }
 
 enum PowerUps {
-	FastProjectiles = 0,
-	PowerProjectiles = 1,
-	PermaShield = 2
+	BURST = 1,
+	BURST_ANGLED = 2,
+	HYPER = 3,
 }
 
 enum State {
@@ -97,35 +96,44 @@ func get_input(delta):
 		
 	if abilities.find(Abilities.SHIELD) > -1:
 		if Input.is_action_pressed("player_action2"):
+			$AnimatedSprite.animation = "intimidate"
 			if Input.is_action_just_pressed("player_action2"):
 				setShieldState(ShieldState.PERFECT)
 			elif $Shield/PerfectDetectionTimer.is_stopped() and $Shield/PerfectCooldownTimer.is_stopped():
 				setShieldState(ShieldState.ACTIVE)
 				
-		elif shieldState != ShieldState.INACTIVE and $Shield/PerfectDetectionTimer.is_stopped() and $Shield/PerfectCooldownTimer.is_stopped():
+		elif $Shield/PerfectDetectionTimer.is_stopped() and $Shield/PerfectCooldownTimer.is_stopped():
 			setShieldState(ShieldState.INACTIVE)
 			state = State.DEFAULT
+		
+		if Input.is_action_just_released("player_action2"):
+			$AnimatedSprite.animation = "default"
 			
 	
 	if abilities.find(Abilities.HEAT_SEEKING) > -1 and currentBullet:
 		var startingHeatSeekingIndex = heatSeekingIndex
 		var enemies = get_tree().get_nodes_in_group("enemies")
+		enemies = filter_dead_enemies(enemies)
+		
 		enemies.sort_custom(self, "sort_enemies")
-		if enemies.size() > 0 and currentBullet.heat_seeking: 
-			if(Input.is_action_just_released("player_reticle_control_wheel_up")
-					or Input.is_action_just_pressed("player_reticle_control_up")):
-				heatSeekingIndex += 1
-				if heatSeekingIndex > enemies.size() - 1:
-					heatSeekingIndex = 0
+		if currentBullet.heat_seeking:
+			if enemies.size() > 0: 
+				if(Input.is_action_just_released("player_reticle_control_wheel_up")
+						or Input.is_action_just_pressed("player_reticle_control_up")):
+					heatSeekingIndex += 1
+					if heatSeekingIndex > enemies.size() - 1:
+						heatSeekingIndex = 0
+					
+				if(Input.is_action_just_released("player_reticle_control_wheel_down")
+						or Input.is_action_just_pressed("player_reticle_control_down")):
+					heatSeekingIndex -= 1
+					if heatSeekingIndex < 0:
+						heatSeekingIndex = enemies.size() - 1
 				
-			if(Input.is_action_just_released("player_reticle_control_wheel_down")
-					or Input.is_action_just_pressed("player_reticle_control_down")):
-				heatSeekingIndex -= 1
-				if heatSeekingIndex < 0:
-					heatSeekingIndex = enemies.size() - 1
-			
-			if heatSeekingIndex != startingHeatSeekingIndex:
-				currentBullet.set_heat_seeking(enemies[heatSeekingIndex])
+				if heatSeekingIndex != startingHeatSeekingIndex:
+					currentBullet.set_heat_seeking(enemies[heatSeekingIndex])
+			else:
+				currentBullet.set_heat_seeking(null)
 	
 func construct_current_bullet():
 	currentBullet = Echo.instance()
@@ -133,15 +141,7 @@ func construct_current_bullet():
 	currentBullet.global_position = $ProjectileSpawner.global_position
 	currentBullet.passiveVelocity = Vector2(0, 0)
 	currentBullet.activeVelocity = Vector2(1, 0)
-	owner.add_child(currentBullet)
-	
-	if abilities.find(Abilities.HEAT_SEEKING) > -1:
-		var enemies = get_tree().get_nodes_in_group("enemies")
-		if enemies.size() > 0:
-			enemies.sort_custom(self, "sort_enemies")
-			print(enemies)
-			currentBullet.set_heat_seeking(enemies[0])
-		
+	owner.add_child(currentBullet)		
 	
 func update_current_bullet():
 	if abilities.find(Abilities.CHARGE_SHOT) > -1 and currentBullet:
@@ -161,14 +161,29 @@ func shoot():
 			
 		currentBullet.damage *= chargeMultiplier	
 		charge = 0
+		chargeMultiplier = 1
 		emit_signal("charge_changed")
 		
 	if abilities.find(Abilities.HEAT_SEEKING) > -1:
 		heatSeekingIndex = 0
-		
+	
 	# release the bullet	
 	if currentBullet: 
 		currentBullet.active = true
+	
+	if !currentBullet.heat_seeking:
+		if powerup == PowerUps.BURST or powerup == PowerUps.BURST_ANGLED:
+			var currentBulletUp = currentBullet.copy()
+			currentBulletUp.global_position.y = currentBullet.global_position.y - 30
+			currentBulletUp.activeVelocity.y -= .3
+			owner.add_child(currentBulletUp)
+			bullets.push_back(currentBulletUp)
+			
+			var currentBulletDown = currentBullet.copy()
+			currentBulletDown.global_position.y = currentBullet.global_position.y + 30
+			owner.add_child(currentBulletDown)
+			bullets.push_back(currentBulletDown)
+			
 		bullets.push_back(currentBullet) 
 		currentBullet = null
 		
@@ -184,6 +199,14 @@ func sort_enemies(a, b):
 		return true
 		
 	return false
+	
+func filter_dead_enemies(list: Array):
+	var filtered: Array = []
+	for element in list:
+		if element.health > 0 and element.position.x > 40:
+			filtered.append(element)
+			
+	return filtered 
 	
 		
 func adjust_shield_charge(delta):
@@ -212,8 +235,16 @@ func build_charge(delta):
 		
 	charge = clamp(charge, 0, 100)
 	
-#	if charge != startingCharge:
-#		emit_signal("charge_changed")
+	if abilities.find(Abilities.HEAT_SEEKING) > -1:
+		if charge > 10 and currentBullet: 
+			var enemies = get_tree().get_nodes_in_group("enemies")
+			enemies = filter_dead_enemies(enemies)
+			if enemies.size() > 0:
+				enemies.sort_custom(self, "sort_enemies")
+				currentBullet.set_heat_seeking(enemies[0])
+	
+	if charge != startingCharge:
+		emit_signal("charge_changed")
 	
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -250,14 +281,29 @@ func take_damage(damage):
 		$AnimatedSprite.modulate = Color.red
 		$AnimatedSprite.play("hit")
 		
+		# interrupt charge shot
+		if currentBullet != null:
+			currentBullet.queue_free()
+			currentBullet = null
+			
+		charge = 0
+		chargeMultiplier = 1
+		heatSeekingIndex = 0
+		
 		if health <= 0:
 			kill()
 		
 	return is_vulnerable
 	
 	
-func setShieldState(newShieldstate):
-	shieldState = newShieldstate
+func setShieldState(newShieldState):
+	if shieldState == newShieldState:
+		return 
+		
+	if newShieldState == ShieldState.ACTIVE and shieldState == ShieldState.INACTIVE and shield == 0:
+		return 
+	
+	shieldState = newShieldState
 	emit_signal("shield_state_changed")
 		
 	match shieldState:
@@ -307,12 +353,18 @@ func _on_Area2D_area_entered(area):
 	if area.is_in_group("enemy_projectiles"):
 		if take_damage(area.damage):
 			area.destroy()
+	
+	elif area.is_in_group("powerups"):
+		powerup = PowerUps.BURST if area.powerupType == 1 else PowerUps.HYPER 
+		$PowerupTimer.start()
+		emit_signal("powerup_changed")
+		area.destroy()
 		
 
 func _on_ActiveHitBox_area_entered(area):
 	if area.is_in_group("enemy_projectiles"):
 		area.destroy()
-	pass # Replace with function body.
+	pass # Replace with function baody.
 
 
 func _on_PerfectHitBox_area_entered(area):
@@ -340,3 +392,7 @@ func _on_PerfectCooldownTimer_timeout():
 	else:
 		setShieldState(ShieldState.INACTIVE)
 		
+
+func _on_PowerupTimer_timeout():
+	powerup = null
+	emit_signal("powerup_changed")
