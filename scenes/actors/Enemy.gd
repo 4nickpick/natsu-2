@@ -2,7 +2,7 @@ extends KinematicBody2D
 
 var health = 2
 var speed = 150
-var velocity = Vector2(-1, 0)
+var velocity = Vector2(0, 0) #Vector2(-1, 0)
 
 const Echo = preload("res://scenes/projectiles/Echo.tscn")
 const Powerup = preload("res://scenes/powerups/Powerup.tscn")
@@ -45,6 +45,7 @@ func take_damage(damage):
 	return true
 	
 func kill():
+	set_collision_layer_bit(1, false)
 	health = 0
 	velocity = Vector2.ZERO
 	$HitBoxes/Area2D/CollisionShape2D.disabled = true
@@ -56,13 +57,12 @@ func _on_AnimatedSprite_animation_finished():
 		
 		var powerup = Powerup.instance()
 		powerup.global_position = global_position
+		randomize()
+		var type = randi() % 3 
+		powerup.type = type
 		get_parent().add_child(powerup)
 		
 		destroy()
-		
-			
-			
-
 
 func _on_CooldownTimer_timeout():
 #	shoot()

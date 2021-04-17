@@ -23,21 +23,21 @@ func _process(_delta):
 #	$HUD.update_enemy_count(get_tree().get_nodes_in_group("enemies").size())
 	
 	
-
-func _on_EnemySpawner_timeout():	
-	var centerPosition = $EnemySpawner/CollisionShape2D.global_position + $EnemySpawner.global_position
-	var size = $EnemySpawner/CollisionShape2D.shape.extents
-	
-	var position = Vector2(
-		(randi() % int(size.x)) - (size.x/2) + centerPosition.x,
-		(randi() % int(size.y)) - (size.y/2) + centerPosition.y
-	)
-	
-	var enemy = eyeball.instance()
-	enemy.global_position = position
-	add_child(enemy)
-	enemy.add_to_group("enemies")
-	pass
+#
+#func _on_EnemySpawner_timeout():	
+#	var centerPosition = $EnemySpawner/CollisionShape2D.global_position + $EnemySpawner.global_position
+#	var size = $EnemySpawner/CollisionShape2D.shape.extents
+#
+#	var position = Vector2(
+#		(randi() % int(size.x)) - (size.x/2) + centerPosition.x,
+#		(randi() % int(size.y)) - (size.y/2) + centerPosition.y
+#	)
+#
+#	var enemy = eyeball.instance()
+#	enemy.global_position = position
+#	add_child(enemy)
+#	enemy.add_to_group("enemies")
+#	pass
 
 func _on_Player_died():
 	$HUD.update_health($Player.health)

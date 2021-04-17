@@ -35,13 +35,13 @@ var abilities = [
 	Abilities.HEAT_SEEKING
 ]
 
-var powerup = PowerUps.BURST
+var powerup = null
 
 enum Abilities {
 	CHARGE_SHOT = 0,
 	SHIELD = 1,
 	HEAT_SEEKING = 2,
-	MISSILE = 4 # splash
+#	MISSILE = 4 # splash
 }
 
 enum PowerUps {
@@ -72,6 +72,7 @@ enum ShieldState {
 }
 
 const Echo = preload("res://scenes/projectiles/Echo.tscn")
+const Hyper = preload("res://scenes/projectiles/HyperBeam.tscn")
 
 func get_input(delta):
 	velocity = Vector2()
@@ -136,6 +137,8 @@ func get_input(delta):
 				currentBullet.set_heat_seeking(null)
 	
 func construct_current_bullet():
+	if powerup == PowerUps.HYPER: # there's no point in shooting at this point
+		return
 	currentBullet = Echo.instance()
 	currentBullet.set_origin("player")
 	currentBullet.global_position = $ProjectileSpawner.global_position
@@ -144,6 +147,9 @@ func construct_current_bullet():
 	owner.add_child(currentBullet)		
 	
 func update_current_bullet():
+	if powerup == PowerUps.HYPER:
+		return
+			
 	if abilities.find(Abilities.CHARGE_SHOT) > -1 and currentBullet:
 		if charge > 0:
 			chargeMultiplier = (charge / 100.0) + 1 
@@ -154,6 +160,9 @@ func update_current_bullet():
 	
 	
 func shoot():
+	if powerup == PowerUps.HYPER:
+		pass
+		
 	if abilities.find(Abilities.CHARGE_SHOT) > -1 and currentBullet:
 		if charge == 100:
 			currentBullet.invincible = true
@@ -171,18 +180,21 @@ func shoot():
 	if currentBullet: 
 		currentBullet.active = true
 	
-	if !currentBullet.heat_seeking:
-		if powerup == PowerUps.BURST or powerup == PowerUps.BURST_ANGLED:
-			var currentBulletUp = currentBullet.copy()
-			currentBulletUp.global_position.y = currentBullet.global_position.y - 30
-			currentBulletUp.activeVelocity.y -= .3
-			owner.add_child(currentBulletUp)
-			bullets.push_back(currentBulletUp)
-			
-			var currentBulletDown = currentBullet.copy()
-			currentBulletDown.global_position.y = currentBullet.global_position.y + 30
-			owner.add_child(currentBulletDown)
-			bullets.push_back(currentBulletDown)
+		if !currentBullet.heat_seeking:
+			if powerup == PowerUps.BURST or powerup == PowerUps.BURST_ANGLED:
+				var currentBulletUp = currentBullet.copy()
+				currentBulletUp.global_position.y = currentBullet.global_position.y - 30
+				if powerup == PowerUps.BURST_ANGLED:
+					currentBulletUp.activeVelocity = currentBulletUp.activeVelocity.rotated(-.25)
+				owner.add_child(currentBulletUp)
+				bullets.push_back(currentBulletUp)
+				
+				var currentBulletDown = currentBullet.copy()
+				currentBulletDown.global_position.y = currentBullet.global_position.y + 30
+				if powerup == PowerUps.BURST_ANGLED:
+					currentBulletDown.activeVelocity = currentBulletDown.activeVelocity.rotated(.25)
+				owner.add_child(currentBulletDown)
+				bullets.push_back(currentBulletDown)
 			
 		bullets.push_back(currentBullet) 
 		currentBullet = null
@@ -245,12 +257,27 @@ func build_charge(delta):
 	
 	if charge != startingCharge:
 		emit_signal("charge_changed")
+		
+func construct_hyper_beam():
+	$AnimatedSprite.animation = "intimidate"
+	if powerup == PowerUps.HYPER:
+		var h = Hyper.instance()
+		h.position = $ProjectileSpawner.position
+		add_child(h)
+		
+func deconstruct_hyper_beam():
+	var h = get_node("HyperBeam")
+	if h:
+		$AnimatedSprite.animation = "default"
+		h.queue_free()
 	
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	setShieldState(ShieldState.INACTIVE)
 	emit_signal("health_changed")
 	add_to_group("player")
+	
+	construct_hyper_beam()
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):	
@@ -264,8 +291,9 @@ func _physics_process(delta):
 	
 	if collision:
 		if collision.collider.is_in_group("enemies"):
-			take_damage(1)
-			collision.collider.kill()		
+			if collision.collider.health > 0:
+				take_damage(1)
+				collision.collider.kill()		
 			
 	update_current_bullet()
 		
@@ -278,8 +306,11 @@ func take_damage(damage):
 		$HitCooldownTimer.start()	
 		state = State.DAMAGED
 		$HitBoxes/Area2D/CollisionShape2D.disabled = true
+		set_collision_mask_bit(1, false)
+		set_collision_mask_bit(3, false)
 		$AnimatedSprite.modulate = Color.red
 		$AnimatedSprite.play("hit")
+		deconstruct_hyper_beam()
 		
 		# interrupt charge shot
 		if currentBullet != null:
@@ -347,6 +378,8 @@ func _on_HitCooldownTimer_timeout():
 	$AnimatedSprite.modulate = Color.white
 	$AnimatedSprite.play("default")
 	$HitBoxes/Area2D/CollisionShape2D.disabled = false
+	set_collision_mask_bit(1, true)
+	set_collision_mask_bit(3, true)
 	
 	
 func _on_Area2D_area_entered(area):
@@ -355,10 +388,15 @@ func _on_Area2D_area_entered(area):
 			area.destroy()
 	
 	elif area.is_in_group("powerups"):
-		powerup = PowerUps.BURST if area.powerupType == 1 else PowerUps.HYPER 
-		$PowerupTimer.start()
-		emit_signal("powerup_changed")
-		area.destroy()
+		if $PowerupTimer.is_stopped():
+			powerup = PowerUps.BURST if area.type == 1 else PowerUps.HYPER 
+			
+			if powerup == PowerUps.HYPER:
+				construct_hyper_beam()
+				
+			$PowerupTimer.start()
+			emit_signal("powerup_changed")
+			area.destroy()
 		
 
 func _on_ActiveHitBox_area_entered(area):
@@ -395,4 +433,5 @@ func _on_PerfectCooldownTimer_timeout():
 
 func _on_PowerupTimer_timeout():
 	powerup = null
+	deconstruct_hyper_beam()
 	emit_signal("powerup_changed")
