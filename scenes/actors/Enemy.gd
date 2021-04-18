@@ -2,7 +2,14 @@ extends KinematicBody2D
 
 var health = 2
 var speed = 150
-var velocity = Vector2(0, 0) #Vector2(-1, 0)
+var velocity = Vector2(0, 0) #Vector2(-1, 0) 
+
+export (NodePath) var path 
+export (NodePath) var powerup 
+var patrol_points
+var patrol_index = 0
+var patrol_type 
+
 
 const Echo = preload("res://scenes/projectiles/Echo.tscn")
 const Powerup = preload("res://scenes/powerups/Powerup.tscn")
@@ -20,6 +27,12 @@ func shoot():
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
+	if path:
+		patrol_points = get_node(path).curve.get_baked_points()
+		position = patrol_points[0]
+	else:
+		velocity = Vector2.LEFT
+		
 	velocity = velocity.normalized() * speed
 	pass # Replace with function body.
 	
@@ -29,7 +42,22 @@ func _process(_delta):
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
-	move_and_collide(velocity * delta)
+	
+	if !path or health == 0:
+		move_and_collide(velocity * delta)
+	else:
+		var target = patrol_points[patrol_index]
+		var distance = position.distance_to(target)
+		if distance < 1:
+			patrol_index = wrapi(patrol_index + 1, 0, patrol_points.size())
+			target = patrol_points[patrol_index]
+		
+		var maxMovementDistance = speed * delta
+		var movementDistance = min(distance, maxMovementDistance)
+		var tempSpeed = movementDistance / delta 
+		
+		velocity = (target - position).normalized() * tempSpeed
+		var collision = move_and_collide(velocity * delta)
 			
 	if position.x < 0 - speed: # enemy should be well outside visible range at this point 
 		destroy()
@@ -55,12 +83,11 @@ func kill():
 func _on_AnimatedSprite_animation_finished():
 	if $AnimatedSprite.animation == "dead":
 		
-		var powerup = Powerup.instance()
-		powerup.global_position = global_position
-		randomize()
-		var type = randi() % 3 
-		powerup.type = type
-		get_parent().add_child(powerup)
+		var powerupNode = get_node(path)
+		if powerupNode:
+			powerupNode.visible = true
+			powerupNode.global_position = global_position
+			get_parent().add_child(powerupNode)
 		
 		destroy()
 

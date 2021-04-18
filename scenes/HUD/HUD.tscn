@@ -9,8 +9,11 @@ font_path = "res://assets/fonts/dogica/TTF/dogicabold.ttf"
 size = 22
 font_data = SubResource( 1 )
 
-[node name="HUD" type="CanvasLayer"]
+[node name="HUD" type="Control"]
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="HUDContainer" type="MarginContainer" parent="."]
 margin_left = 40.0

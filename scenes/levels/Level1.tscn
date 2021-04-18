@@ -1,10 +1,12 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://scenes/actors/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/levels/Level1.gd" type="Script" id=2]
 [ext_resource path="res://scripts/ParallaxBackground.gd" type="Script" id=3]
 [ext_resource path="res://assets/art/player/porpoise-vaquita/fish-bronze-striped-grunt.png" type="Texture" id=4]
 [ext_resource path="res://scenes/HUD/HUD.tscn" type="PackedScene" id=5]
+[ext_resource path="res://scenes/levels/Camera2D.gd" type="Script" id=6]
+[ext_resource path="res://scenes/actors/Enemy.tscn" type="PackedScene" id=7]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -26,23 +28,23 @@ extents = Vector2( 640, 10 )
 [sub_resource type="RectangleShape2D" id=5]
 extents = Vector2( 640, 10 )
 
-[sub_resource type="RectangleShape2D" id=6]
-extents = Vector2( 360, 360 )
+[sub_resource type="Curve2D" id=6]
+bake_interval = 50.0
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 1479.93, 177.928, 0, 0, 0, 0, 1437.96, 229.806, 0, 0, 0, 0, 1421.92, 299.652, 0, 0, 0, 0, 1400.72, 470.36, -70.1539, -22.1686, 70.1539, 22.1686, 1491.94, 649.127 )
+}
 
-[node name="Level1" type="Node"]
+[node name="Level1" type="Node2D"]
 script = ExtResource( 2 )
-
-[node name="HUD" parent="." instance=ExtResource( 5 )]
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 script = ExtResource( 3 )
 
 [node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_mirroring = Vector2( 1280, 0 )
+motion_mirroring = Vector2( 2400, 0 )
 
 [node name="BackgroundColor" type="ColorRect" parent="ParallaxBackground/ParallaxLayer2"]
-margin_left = 2.0
-margin_right = 1282.0
+margin_right = 2400.0
 margin_bottom = 800.0
 color = Color( 0.235294, 0.631373, 0.784314, 1 )
 __meta__ = {
@@ -50,7 +52,7 @@ __meta__ = {
 }
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_mirroring = Vector2( 1800, 0 )
+motion_mirroring = Vector2( 1600, 0 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="ParallaxBackground/ParallaxLayer"]
 modulate = Color( 0.862745, 0, 0, 1 )
@@ -72,44 +74,55 @@ scale = Vector2( 2, 2 )
 frames = SubResource( 1 )
 offset = Vector2( -265.543, 8.00001 )
 
-[node name="Boundaries" type="StaticBody2D" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="HUD" parent="CanvasLayer" instance=ExtResource( 5 )]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( 640, 400 )
+scale = Vector2( 5, 5 )
+current = true
+smoothing_enabled = true
+script = ExtResource( 6 )
+
+[node name="Boundaries" type="StaticBody2D" parent="Camera2D"]
+position = Vector2( -128, -80 )
+scale = Vector2( 0.2, 0.2 )
 collision_layer = 16
 
-[node name="Left" type="CollisionShape2D" parent="Boundaries"]
+[node name="Left" type="CollisionShape2D" parent="Camera2D/Boundaries"]
 position = Vector2( 10, 400 )
 shape = SubResource( 2 )
 
-[node name="Right" type="CollisionShape2D" parent="Boundaries"]
+[node name="Right" type="CollisionShape2D" parent="Camera2D/Boundaries"]
 position = Vector2( 1270, 400 )
 shape = SubResource( 3 )
 
-[node name="Bottom" type="CollisionShape2D" parent="Boundaries"]
+[node name="Bottom" type="CollisionShape2D" parent="Camera2D/Boundaries"]
 position = Vector2( 640, 790 )
 shape = SubResource( 4 )
 
-[node name="Bottom2" type="CollisionShape2D" parent="Boundaries"]
+[node name="Bottom2" type="CollisionShape2D" parent="Camera2D/Boundaries"]
 position = Vector2( 640, 10 )
 shape = SubResource( 5 )
 
-[node name="Player" parent="." instance=ExtResource( 1 )]
-position = Vector2( 136.47, 432.261 )
+[node name="Player" parent="Camera2D" instance=ExtResource( 1 )]
+position = Vector2( -100.706, 6.45219 )
+scale = Vector2( 1, 1 )
 
-[node name="EnemySpawner" type="Area2D" parent="."]
-collision_layer = 0
-collision_mask = 0
+[node name="Enemy" parent="." instance=ExtResource( 7 )]
+position = Vector2( 1518.72, 217.899 )
+path = NodePath("../Path2D")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemySpawner"]
-light_mask = 0
-position = Vector2( 1700, 400 )
-shape = SubResource( 6 )
+[node name="AnimatedSprite" parent="Enemy" index="0"]
+frame = 2
 
-[node name="EnemySpawnTimer" type="Timer" parent="EnemySpawner"]
-wait_time = 3.0
-autostart = true
-[connection signal="charge_changed" from="Player" to="." method="_on_Player_charge_changed"]
-[connection signal="died" from="Player" to="." method="_on_Player_died"]
-[connection signal="health_changed" from="Player" to="." method="_on_Player_health_changed"]
-[connection signal="powerup_changed" from="Player" to="." method="_on_Player_powerup_changed"]
-[connection signal="shield_changed" from="Player" to="." method="_on_Player_shield_changed"]
-[connection signal="shield_state_changed" from="Player" to="." method="_on_Player_shield_state_changed"]
-[connection signal="timeout" from="EnemySpawner/EnemySpawnTimer" to="." method="_on_EnemySpawner_timeout"]
+[node name="CollisionShape2D" parent="Enemy/HitBoxes/Area2D" index="0"]
+position = Vector2( -2.12973, -5.07968 )
+
+[node name="Path2D" type="Path2D" parent="."]
+position = Vector2( 28.6252, 12.7465 )
+curve = SubResource( 6 )
+[connection signal="died" from="Camera2D/Player" to="CanvasLayer/HUD" method="_on_Player_died"]
+
+[editable path="Enemy"]

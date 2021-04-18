@@ -1,10 +1,12 @@
-extends ParallaxBackground
+extends Camera2D
+
+var speed = 150
+export (NodePath) var path 
 
 
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
-#var scroll_speed = 350
 
 
 # Called when the node enters the scene tree for the first time.
@@ -14,5 +16,4 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-#	scroll_offset.x -= scroll_speed * delta
-	pass
+	position.x += speed * delta

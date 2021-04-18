@@ -23,32 +23,32 @@ region = Rect2( 64, 0, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=4]
 flags = 4
-atlas = ExtResource( 1 )
+atlas = ExtResource( 2 )
 region = Rect2( 0, 0, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=5]
 flags = 4
-atlas = ExtResource( 1 )
+atlas = ExtResource( 2 )
 region = Rect2( 32, 0, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=6]
 flags = 4
-atlas = ExtResource( 1 )
+atlas = ExtResource( 2 )
 region = Rect2( 64, 0, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=7]
 flags = 4
-atlas = ExtResource( 2 )
+atlas = ExtResource( 1 )
 region = Rect2( 0, 0, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=8]
 flags = 4
-atlas = ExtResource( 2 )
+atlas = ExtResource( 1 )
 region = Rect2( 32, 0, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=9]
 flags = 4
-atlas = ExtResource( 2 )
+atlas = ExtResource( 1 )
 region = Rect2( 64, 0, 32, 32 )
 
 [sub_resource type="SpriteFrames" id=10]
@@ -60,12 +60,12 @@ animations = [ {
 }, {
 "frames": [ SubResource( 4 ), SubResource( 5 ), SubResource( 6 ) ],
 "loop": true,
-"name": "intimidate",
+"name": "hit",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 7 ), SubResource( 8 ), SubResource( 9 ) ],
 "loop": true,
-"name": "hit",
+"name": "intimidate",
 "speed": 5.0
 } ]
 
@@ -100,7 +100,6 @@ shape = SubResource( 11 )
 [node name="Area2D" type="Area2D" parent="HitBoxes"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBoxes/Area2D"]
-position = Vector2( 1.00792, 0 )
 rotation = 1.5708
 shape = SubResource( 12 )
 
@@ -117,7 +116,6 @@ one_shot = true
 [node name="ActiveHitBox" type="Area2D" parent="Shield"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Shield/ActiveHitBox"]
-scale = Vector2( 1, 1 )
 shape = SubResource( 13 )
 disabled = true
 
