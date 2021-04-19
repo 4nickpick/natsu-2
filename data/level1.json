@@ -1,0 +1,76 @@
+{
+	"level": {
+		"name": "One",
+		"path": [{"x": 0, "y": 0}, {"x": 2480, "y": 0}],
+		"enemies": [ 
+			{
+				"type": "Eyeball",
+				"spawn_trigger": {"x": 100, "y": 0},
+				"group": 1,
+				"end_path_behavior": "Dequeue",
+				"path": [
+					{"x": 800, "y": -20, "speed": 300, "projectile_speed": 1000, "firing_rate": 0, "firing_angle": 270}, 
+					{"x": 800, "y": 250, "speed": 300, "projectile_speed": 1000, "firing_rate": 2, "firing_angle": 270}, 
+					{"x": -20, "y": 250, "speed": 150, "projectile_speed": 1000, "firing_rate": 0.1, "firing_angle": 270}]
+			},
+			{
+				"type": "Eyeball",
+				"spawn_trigger": {"x": 260, "y": 0},
+				"group": 1,
+				"end_path_behavior": "Dequeue",
+				"path": [
+					{"x": 800, "y": -20, "speed": 300, "projectile_speed": 1000, "firing_rate": 0, "firing_angle": 270}, 
+					{"x": 800, "y": 250, "speed": 300, "projectile_speed": 1000, "firing_rate": 2, "firing_angle": 270}, 
+					{"x": -20, "y": 250, "speed": 150, "projectile_speed": 1000, "firing_rate": 0.1, "firing_angle": 270}]
+			},
+			{
+				"type": "Eyeball",
+				"spawn_trigger": {"x": 420, "y": 0},
+				"group": 1,
+				"end_path_behavior": "Dequeue",
+				"path": [
+					{"x": 800, "y": -20, "speed": 300, "projectile_speed": 1000, "firing_rate": 0, "firing_angle": 270}, 
+					{"x": 800, "y": 250, "speed": 300, "projectile_speed": 1000, "firing_rate": 2, "firing_angle": 270}, 
+					{"x": -20, "y": 250, "speed": 150, "projectile_speed": 1000, "firing_rate": 0.1, "firing_angle": 270}]
+			},
+			{
+				"type": "Eyeball",
+				"spawn_trigger": {"x": 180, "y": 0},
+				"group": 2,
+				"end_path_behavior": "Dequeue",
+				"path": [
+					{"x": 800, "y": 900, "speed": 300, "projectile_speed": 1000, "firing_rate": 0, "firing_angle": "player"}, 
+					{"x": 800, "y": 650, "speed": 300, "projectile_speed": 1000, "firing_rate": 2, "firing_angle": "player"}, 
+					{"x": -20, "y": 650, "speed": 150, "projectile_speed": 1000, "firing_rate": 0.1, "firing_angle": "player"}]
+			},
+			{
+				"type": "Eyeball",
+				"spawn_trigger": {"x": 340, "y": 0},
+				"group": 2,
+				"end_path_behavior": "Dequeue",
+				"path": [
+					{"x": 800, "y": 900, "speed": 300, "projectile_speed": 1000, "firing_rate": 0, "firing_angle": "player"}, 
+					{"x": 800, "y": 650, "speed": 300, "projectile_speed": 1000, "firing_rate": 2, "firing_angle": "player"}, 
+					{"x": -20, "y": 650, "speed": 150, "projectile_speed": 1000, "firing_rate": 0.1, "firing_angle": "player"}]
+			},
+			{
+				"type": "Eyeball",
+				"spawn_trigger": {"x": 500, "y": 0},
+				"group": 2,
+				"end_path_behavior": "Dequeue",
+				"path": [
+					{"x": 800, "y": 900, "speed": 300, "projectile_speed": 1000, "firing_rate": 0, "firing_angle": "player"}, 
+					{"x": 800, "y": 650, "speed": 300, "projectile_speed": 1000, "firing_rate": 2, "firing_angle": "player"}, 
+					{"x": -20, "y": 650, "speed": 150, "projectile_speed": 1000, "firing_rate": 0.1, "firing_angle": "player"}]
+			}
+		],
+		"dialogues": [ {
+			"spawn_trigger": {"x": 0, "y": 0},
+			"dialogue": [
+				{"speaker": "Dolphin", "speech": "I won't let Earth down... not today"},
+				{"speaker": "Scope", "speech": "They were right..."},
+			]
+		}
+		]
+	}
+}

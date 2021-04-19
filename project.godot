@@ -8,9 +8,32 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "Resource",
+"class": "DialogueHeader",
+"language": "GDScript",
+"path": "res://scripts/DialogueHeader.gd"
+}, {
+"base": "Resource",
+"class": "DialogueLine",
+"language": "GDScript",
+"path": "res://scripts/DialogueLine.gd"
+}, {
+"base": "Resource",
+"class": "EnemyInstanceHeader",
+"language": "GDScript",
+"path": "res://scripts/EnemyInstanceHeader.gd"
+}, {
+"base": "Resource",
+"class": "EnemyInstancePathBehavior",
+"language": "GDScript",
+"path": "res://scripts/EnemyInstancePathBehavior.gd"
+} ]
 _global_script_class_icons={
-
+"DialogueHeader": "",
+"DialogueLine": "",
+"EnemyInstanceHeader": "",
+"EnemyInstancePathBehavior": ""
 }
 
 [application]

@@ -2,15 +2,16 @@ extends Area2D
 
 export (int) var health = 2
 export (float) var speed = 150
-export (float) var projectileSpeed = 1000
-export (float) var firingRate = .1
+export (float) var projectile_speed = 1000
+export (float) var firing_rate = .1
+export var firing_angle = 0
+export (int) var group = null
 var velocity = Vector2(0, 0) #Vector2(-1, 0) 
 
 export (PoolVector2Array) var path
 export (NodePath) var powerup 
 var patrol_index = 0
 var patrol_iterator = 1 # direction to iterate over patrol_points
-var patrol_points
 
 enum PatrolType {
 	DEQUEUE = 1,
@@ -27,8 +28,10 @@ func shoot():
 	b.set_origin("enemies")
 	get_parent().add_child(b)
 	b.global_position = $ProjectileSpawner.global_position
-	b.activeVelocity = Vector2(-1, 0)
-	b.speed = projectileSpeed
+	if str(firing_angle) == "player":
+		firing_angle = 0
+	b.activeVelocity = Vector2(-1, 0).rotated(deg2rad(firing_angle))
+	b.speed = projectile_speed
 	b.active = true
 		
 
@@ -40,7 +43,7 @@ func _ready():
 	else:
 		velocity = Vector2.LEFT
 		
-	$ProjectileSpawner/CooldownTimer.wait_time = firingRate
+	$ProjectileSpawner/CooldownTimer.wait_time = firing_rate
 		
 	velocity = velocity.normalized()
 	pass # Replace with function body.
@@ -78,9 +81,10 @@ func _physics_process(delta):
 
 			patrol_index = nextPatrolIndex
 			target = path[nextPatrolIndex].patrol_point
-			speed = path[nextPatrolIndex].speed_to_point
-			firingRate = path[nextPatrolIndex].firing_rate_to_point
-			$ProjectileSpawner/CooldownTimer.wait_time =  firingRate
+			speed = path[nextPatrolIndex].speed
+			firing_rate = path[nextPatrolIndex].firing_rate
+			firing_angle = path[nextPatrolIndex].firing_angle
+			$ProjectileSpawner/CooldownTimer.wait_time = firing_rate
 			$ProjectileSpawner/CooldownTimer.stop()
 			$ProjectileSpawner/CooldownTimer.start()
 		
