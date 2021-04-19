@@ -2,7 +2,9 @@ extends KinematicBody2D
 
 signal died
 
-var speed = 400
+var maxSpeed = 400
+var speed = maxSpeed
+
 var velocity = Vector2()
 
 # health
@@ -58,6 +60,7 @@ func get_input(delta):
 	if Input.is_action_pressed("player_up"):
 		velocity.y -= 2
 	velocity = velocity.normalized() * speed
+		
 	
 	if Input.is_action_just_pressed("player_action1"):
 		construct_current_bullet()
@@ -142,7 +145,7 @@ func shoot():
 			currentBullet.activeVelocity *= 1.4
 			
 		currentBullet.damage *= chargeMultiplier	
-		charge = 0
+		self.charge = 0
 		chargeMultiplier = 1
 		emit_signal("charge_changed")
 		
@@ -205,20 +208,19 @@ func adjust_shield_charge(delta):
 	newShield = clamp(newShield, 0, 100)
 	
 	if shield != newShield:
-		shield = newShield
+		self.shield = newShield
 		
 	if shield <= 0:
 		setShieldState((PlayerManager.ShieldState.INACTIVE))
 		
 		
 func build_charge(delta):
-	var startingCharge = charge
 	if Input.is_action_pressed("player_action1"):
-		charge += chargeBuildRate * delta 
+		self.charge += chargeBuildRate * delta 
 	else:
-		charge = 0
+		self.charge = 0
 		
-	charge = clamp(charge, 0, 100)
+	self.charge = clamp(charge, 0, 100)
 	
 	if abilities.find(PlayerManager.Abilities.HEAT_SEEKING) > -1:
 		if charge > 10 and currentBullet: 
@@ -227,9 +229,6 @@ func build_charge(delta):
 			if enemies.size() > 0:
 				enemies.sort_custom(self, "sort_enemies")
 				currentBullet.set_heat_seeking(enemies[0])
-	
-	if charge != startingCharge:
-		emit_signal("charge_changed")
 		
 func construct_hyper_beam():
 	$AnimatedSprite.animation = "intimidate"
@@ -246,6 +245,13 @@ func deconstruct_hyper_beam():
 	
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	PlayerManager.health = health
+	PlayerManager.charge = charge
+	PlayerManager.shield = shield 
+	PlayerManager.abilities = abilities
+	PlayerManager.powerup = powerup
+	
+	
 	setShieldState(PlayerManager.ShieldState.INACTIVE)
 	add_to_group("player")
 	
@@ -259,14 +265,7 @@ func _process(delta):
 		adjust_shield_charge(delta)
 	
 func _physics_process(delta):
-	var collision = move_and_collide(velocity * delta)
-	
-	if collision:
-		if collision.collider.is_in_group("enemies"):
-			if collision.collider.health > 0:
-				take_damage(1)
-				collision.collider.kill()		
-			
+	var collision = move_and_collide(velocity * delta)			
 	update_current_bullet()
 		
 func take_damage(damage):
@@ -289,7 +288,7 @@ func take_damage(damage):
 				currentBullet.queue_free()
 				currentBullet = null
 				
-			charge = 0
+			self.charge = 0
 			chargeMultiplier = 1
 			heatSeekingIndex = 0
 		
@@ -378,7 +377,7 @@ func _on_Area2D_area_entered(area):
 	
 	elif area.is_in_group("powerups"):
 		if $PowerupTimer.is_stopped():
-			powerup = PlayerManager.PowerUps.BURST if area.type == 1 else PlayerManager.PowerUps.HYPER 
+			self.powerup = PlayerManager.PowerUps.BURST if area.type == 1 else PlayerManager.PowerUps.HYPER 
 			
 			if powerup == PlayerManager.PowerUps.HYPER:
 				construct_hyper_beam()
@@ -386,6 +385,10 @@ func _on_Area2D_area_entered(area):
 			$PowerupTimer.start()
 			emit_signal("powerup_changed")
 			area.destroy()
+	elif area.is_in_group("enemies"):
+		if area.health > 0:
+			take_damage(1)
+			area.kill()		
 		
 
 func _on_ActiveHitBox_area_entered(area):
@@ -401,7 +404,7 @@ func _on_PerfectHitBox_area_entered(area):
 		$Shield/PerfectDetectionTimer.stop()
 		area.reflect("player")
 		
-		shield -= 40
+		self.shield -= 40
 		emit_signal("shield_changed")
 		
 

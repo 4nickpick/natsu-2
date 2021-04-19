@@ -1,15 +1,23 @@
-extends KinematicBody2D
+extends Area2D
 
-var health = 2
-var speed = 150
+export (int) var health = 2
+export (float) var speed = 150
+export (float) var projectileSpeed = 1000
+export (float) var firingRate = .1
 var velocity = Vector2(0, 0) #Vector2(-1, 0) 
 
-export (NodePath) var path 
+export (PoolVector2Array) var path
 export (NodePath) var powerup 
-var patrol_points
 var patrol_index = 0
-var patrol_type 
+var patrol_iterator = 1 # direction to iterate over patrol_points
+var patrol_points
 
+enum PatrolType {
+	DEQUEUE = 1,
+	PATROL_LOOP = 2,
+	PATROL_BACK = 3
+}
+export (PatrolType) var end_path_behavior = PatrolType.DEQUEUE
 
 const Echo = preload("res://scenes/projectiles/Echo.tscn")
 const Powerup = preload("res://scenes/powerups/Powerup.tscn")
@@ -20,7 +28,7 @@ func shoot():
 	get_parent().add_child(b)
 	b.global_position = $ProjectileSpawner.global_position
 	b.activeVelocity = Vector2(-1, 0)
-	b.speed = 1000
+	b.speed = projectileSpeed
 	b.active = true
 		
 
@@ -28,12 +36,13 @@ func shoot():
 func _ready():
 	randomize()
 	if path:
-		patrol_points = get_node(path).curve.get_baked_points()
-		position = patrol_points[0]
+		position = path[0].patrol_point
 	else:
 		velocity = Vector2.LEFT
 		
-	velocity = velocity.normalized() * speed
+	$ProjectileSpawner/CooldownTimer.wait_time = firingRate
+		
+	velocity = velocity.normalized()
 	pass # Replace with function body.
 	
 func _process(_delta):
@@ -42,25 +51,46 @@ func _process(_delta):
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
-	
-	if !path or health == 0:
-		move_and_collide(velocity * delta)
+	if !path:
+		position += (velocity * speed * delta)
+		
+		if position.x < 0 - speed: # enemy should be well outside visible range at this point 
+			destroy()
 	else:
-		var target = patrol_points[patrol_index]
+		var target = path[patrol_index].patrol_point
 		var distance = position.distance_to(target)
+		
+		# we've reached our target position 
 		if distance < 1:
-			patrol_index = wrapi(patrol_index + 1, 0, patrol_points.size())
-			target = patrol_points[patrol_index]
+			
+			# are we at the end of our patrol?
+			var nextPatrolIndex = patrol_index + patrol_iterator
+			if  patrol_iterator > 0 and nextPatrolIndex > path.size()-1 or patrol_iterator < 0 and nextPatrolIndex < 0:
+				match end_path_behavior:
+					PatrolType.DEQUEUE:
+						destroy()
+						return
+					PatrolType.PATROL_LOOP:
+						nextPatrolIndex = 0
+					PatrolType.PATROL_BACK:
+						patrol_iterator *= -1
+						nextPatrolIndex = patrol_index + patrol_iterator
+
+			patrol_index = nextPatrolIndex
+			target = path[nextPatrolIndex].patrol_point
+			speed = path[nextPatrolIndex].speed_to_point
+			firingRate = path[nextPatrolIndex].firing_rate_to_point
+			$ProjectileSpawner/CooldownTimer.wait_time =  firingRate
+			$ProjectileSpawner/CooldownTimer.stop()
+			$ProjectileSpawner/CooldownTimer.start()
 		
 		var maxMovementDistance = speed * delta
-		var movementDistance = min(distance, maxMovementDistance)
+		var movementDistance = min(position.distance_to(target), maxMovementDistance)
 		var tempSpeed = movementDistance / delta 
 		
-		velocity = (target - position).normalized() * tempSpeed
-		var collision = move_and_collide(velocity * delta)
-			
-	if position.x < 0 - speed: # enemy should be well outside visible range at this point 
-		destroy()
+		velocity = (target - position).normalized() * tempSpeed * delta
+		position += velocity
+		
 
 func destroy():
 	queue_free()
@@ -74,6 +104,7 @@ func take_damage(damage):
 	
 func kill():
 	set_collision_layer_bit(1, false)
+	path = null
 	health = 0
 	velocity = Vector2.ZERO
 	$HitBoxes/Area2D/CollisionShape2D.disabled = true
@@ -82,17 +113,17 @@ func kill():
 
 func _on_AnimatedSprite_animation_finished():
 	if $AnimatedSprite.animation == "dead":
-		
-		var powerupNode = get_node(path)
-		if powerupNode:
-			powerupNode.visible = true
-			powerupNode.global_position = global_position
-			get_parent().add_child(powerupNode)
+		if path:
+			var powerupNode = get_node(path)
+			if powerupNode:
+				powerupNode.visible = true
+				powerupNode.global_position = global_position
+				get_parent().add_child(powerupNode)
 		
 		destroy()
 
 func _on_CooldownTimer_timeout():
-#	shoot()
+	shoot()
 	pass
 
 
@@ -100,4 +131,5 @@ func _on_Area2D_area_entered(area):
 	if area.is_in_group("player_projectiles"):
 		if take_damage(area.damage):
 			area.destroy()
+		
 		

@@ -39,7 +39,7 @@ animations = [ {
 [sub_resource type="CircleShape2D" id=6]
 radius = 9.10264
 
-[node name="Enemy" type="KinematicBody2D"]
+[node name="Enemy" type="Area2D"]
 light_mask = 2
 scale = Vector2( 5, 5 )
 collision_layer = 2
@@ -72,7 +72,8 @@ shape = SubResource( 6 )
 position = Vector2( -8.88944, -5.07969 )
 
 [node name="CooldownTimer" type="Timer" parent="ProjectileSpawner"]
-wait_time = 3.0
+process_mode = 0
+wait_time = 0.1
 autostart = true
 
 [node name="HitCooldownTimer" type="Timer" parent="."]
