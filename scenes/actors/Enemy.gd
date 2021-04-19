@@ -29,8 +29,9 @@ func shoot():
 	get_parent().add_child(b)
 	b.global_position = $ProjectileSpawner.global_position
 	if str(firing_angle) == "player":
-		firing_angle = 0
-	b.activeVelocity = Vector2(-1, 0).rotated(deg2rad(firing_angle))
+		b.activeVelocity = Vector2(1, 0).rotated((PlayerManager.position - position).normalized().angle())
+	else:
+		b.activeVelocity = Vector2(-1, 0).rotated(deg2rad(firing_angle))
 	b.speed = projectile_speed
 	b.active = true
 		

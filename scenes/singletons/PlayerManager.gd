@@ -44,6 +44,8 @@ signal powerup_changed
 onready var abilities = [] setget set_abilities
 signal abilities_changed 
 
+onready var position = 0 setget set_position
+
 
 func set_state(value):
 	state = value
@@ -68,6 +70,9 @@ func set_powerup(value):
 func set_abilities(value):
 	abilities = value
 	emit_signal("abilities_changed", value)
+	
+func set_position(value):
+	position = value
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

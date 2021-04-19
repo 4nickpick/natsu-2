@@ -266,6 +266,7 @@ func _process(delta):
 	
 func _physics_process(delta):
 	var collision = move_and_collide(velocity * delta)			
+	PlayerManager.position = position
 	update_current_bullet()
 		
 func take_damage(damage):
