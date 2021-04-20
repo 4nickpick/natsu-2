@@ -6,3 +6,4 @@ var speed: float
 var projectile_speed: float
 var firing_rate: float
 var firing_angle
+var firing_type = null

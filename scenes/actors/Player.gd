@@ -21,6 +21,7 @@ var shieldState = null
 onready var charge = 0 setget set_charge
 var chargeBuildRate = 100
 var chargeMultiplier = 1
+signal charge_changed(value)
 
 # heat seeking
 var heatSeekingIndex = 0
@@ -147,7 +148,7 @@ func shoot():
 		currentBullet.damage *= chargeMultiplier	
 		self.charge = 0
 		chargeMultiplier = 1
-		emit_signal("charge_changed")
+		emit_signal("charge_changed", charge)
 		
 	if abilities.find(PlayerManager.Abilities.HEAT_SEEKING) > -1:
 		heatSeekingIndex = 0
@@ -238,8 +239,8 @@ func construct_hyper_beam():
 		add_child(h)
 		
 func deconstruct_hyper_beam():
-	var h = get_node("HyperBeam")
-	if h:
+	var h = get_node_or_null("HyperBeam")
+	if h != null:
 		$AnimatedSprite.animation = "default"
 		h.queue_free()
 	
@@ -265,7 +266,7 @@ func _process(delta):
 		adjust_shield_charge(delta)
 	
 func _physics_process(delta):
-	var collision = move_and_collide(velocity * delta)			
+	var collision = move_and_slide(velocity)			
 	PlayerManager.position = position
 	update_current_bullet()
 		
@@ -277,7 +278,7 @@ func take_damage(damage):
 		if health > 0:
 			$HitCooldownTimer.start()	
 			state = PlayerManager.State.DAMAGED
-			$HitBoxes/Area2D/CollisionShape2D.disabled = true
+			$HitBoxes/Area2D/CollisionShape2D.set_deferred("disabled", true)
 			set_collision_mask_bit(1, false)
 			set_collision_mask_bit(3, false)
 			$AnimatedSprite.modulate = Color.red
@@ -304,14 +305,14 @@ func setShieldState(newShieldState):
 		return 
 	
 	shieldState = newShieldState
-	emit_signal("shield_state_changed")
+#	emit_signal("shield_state_changed")
 		
 	match shieldState:
 		PlayerManager.ShieldState.INACTIVE:
 			state = PlayerManager.State.DEFAULT
 			$Shield/PerfectDetectionTimer.stop()
-			$Shield/ActiveHitBox/CollisionShape2D.disabled = true
-			$Shield/PerfectHitBox/CollisionShape2D.disabled = true
+			$Shield/ActiveHitBox/CollisionShape2D.set_deferred("disabled", true)
+			$Shield/PerfectHitBox/CollisionShape2D.set_deferred("disabled", true)
 			$Shield/ActiveHitBox/Sprite.visible = false
 			$Shield/PerfectHitBox/Sprite.visible = false
 			$AnimatedSprite.animation = "default"
@@ -319,16 +320,16 @@ func setShieldState(newShieldState):
 				$Shield/RechargeDelayTimer.start()
 		PlayerManager.ShieldState.ACTIVE:
 			state = PlayerManager.State.SHIELD
-			$Shield/ActiveHitBox/CollisionShape2D.disabled = false
-			$Shield/PerfectHitBox/CollisionShape2D.disabled = true
+			$Shield/ActiveHitBox/CollisionShape2D.set_deferred("disabled", false)
+			$Shield/PerfectHitBox/CollisionShape2D.set_deferred("disabled", true)
 			$Shield/ActiveHitBox/Sprite.visible = true
 			$Shield/PerfectHitBox/Sprite.visible = false
 			$AnimatedSprite.animation = "intimidate"
 		PlayerManager.ShieldState.PERFECT:
 			state = PlayerManager.State.SHIELD
 			$Shield/PerfectDetectionTimer.start()
-			$Shield/ActiveHitBox/CollisionShape2D.disabled = false
-			$Shield/PerfectHitBox/CollisionShape2D.disabled = false
+			$Shield/ActiveHitBox/CollisionShape2D.set_deferred("disabled", false)
+			$Shield/PerfectHitBox/CollisionShape2D.set_deferred("disabled", false)
 			$Shield/ActiveHitBox/Sprite.visible = true	
 			$Shield/PerfectHitBox/Sprite.visible = false
 			$AnimatedSprite.animation = "intimidate"
@@ -366,7 +367,7 @@ func _on_HitCooldownTimer_timeout():
 	state = PlayerManager.State.DEFAULT
 	$AnimatedSprite.modulate = Color.white
 	$AnimatedSprite.play("default")
-	$HitBoxes/Area2D/CollisionShape2D.disabled = false
+	$HitBoxes/Area2D/CollisionShape2D.set_deferred("disabled", false)
 	set_collision_mask_bit(1, true)
 	set_collision_mask_bit(3, true)
 	

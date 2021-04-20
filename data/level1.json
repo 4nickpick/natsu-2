@@ -1,76 +1,99 @@
 {
 	"level": {
 		"name": "One",
-		"path": [{"x": 0, "y": 0}, {"x": 2480, "y": 0}],
+		"path": [{"x": 0, "y": 0}, {"x": 270, "y": 0}],
+		"speed": 80,
 		"enemies": [ 
 			{
 				"type": "Eyeball",
-				"spawn_trigger": {"x": 100, "y": 0},
+				"enabled": true,
+				"spawn_trigger": {"x": 1, "y": 0},
 				"group": 1,
-				"end_path_behavior": "Dequeue",
+				"end_path_behavior": 1,
 				"path": [
-					{"x": 800, "y": -20, "speed": 300, "projectile_speed": 1000, "firing_rate": 0, "firing_angle": 270}, 
-					{"x": 800, "y": 250, "speed": 300, "projectile_speed": 1000, "firing_rate": 2, "firing_angle": 270}, 
-					{"x": -20, "y": 250, "speed": 150, "projectile_speed": 1000, "firing_rate": 0.1, "firing_angle": 270}]
+					{"x": 10, "y": -1, "speed": 300, "projectile_speed": 1000, "firing_rate": 0, "firing_angle": 90, "firing_type": null}, 
+					{"x": 10, "y": 3, "speed": 300, "projectile_speed": 1000, "firing_rate": 2, "firing_angle": 0, "firing_type": null}, 
+					{"x": -1, "y": 3, "speed": 150, "projectile_speed": 1000, "firing_rate": 1, "firing_angle": 90, "firing_type": null}
+				]
 			},
 			{
 				"type": "Eyeball",
-				"spawn_trigger": {"x": 260, "y": 0},
+				"enabled": true,
+				"spawn_trigger": {"x": 3, "y": 0},
 				"group": 1,
-				"end_path_behavior": "Dequeue",
+				"end_path_behavior": 1,
 				"path": [
-					{"x": 800, "y": -20, "speed": 300, "projectile_speed": 1000, "firing_rate": 0, "firing_angle": 270}, 
-					{"x": 800, "y": 250, "speed": 300, "projectile_speed": 1000, "firing_rate": 2, "firing_angle": 270}, 
-					{"x": -20, "y": 250, "speed": 150, "projectile_speed": 1000, "firing_rate": 0.1, "firing_angle": 270}]
+					{"x": 10, "y": -1, "speed": 300, "projectile_speed": 1000, "firing_rate": 0, "firing_angle": 180, "firing_type": null},
+					{"x": 10, "y": 3, "speed": 300, "projectile_speed": 1000, "firing_rate": 2, "firing_angle": 0, "firing_type": null}, 
+					{"x": -1, "y": 3, "speed": 150, "projectile_speed": 1000, "firing_rate": 1, "firing_angle": 180, "firing_type": null}
+				]
 			},
 			{
 				"type": "Eyeball",
-				"spawn_trigger": {"x": 420, "y": 0},
+				"enabled": true,
+				"spawn_trigger": {"x": 5, "y": 0},
 				"group": 1,
-				"end_path_behavior": "Dequeue",
+				"end_path_behavior": 1,
 				"path": [
-					{"x": 800, "y": -20, "speed": 300, "projectile_speed": 1000, "firing_rate": 0, "firing_angle": 270}, 
-					{"x": 800, "y": 250, "speed": 300, "projectile_speed": 1000, "firing_rate": 2, "firing_angle": 270}, 
-					{"x": -20, "y": 250, "speed": 150, "projectile_speed": 1000, "firing_rate": 0.1, "firing_angle": 270}]
+					{"x": 10, "y": -1, "speed": 300, "projectile_speed": 1000, "firing_rate": 0, "firing_angle": -90, "firing_type": null}, 
+					{"x": 10, "y": 3, "speed": 300, "projectile_speed": 1000, "firing_rate": 2, "firing_angle": 0, "firing_type": null}, 
+					{"x": -1, "y": 3, "speed": 150, "projectile_speed": 1000, "firing_rate": 1, "firing_angle": -90, "firing_type": null}
+				]
 			},
 			{
 				"type": "Eyeball",
-				"spawn_trigger": {"x": 180, "y": 0},
+				"enabled": true,
+				"spawn_trigger": {"x": 2, "y": 0},
 				"group": 2,
-				"end_path_behavior": "Dequeue",
+				"end_path_behavior": 1,
 				"path": [
-					{"x": 800, "y": 900, "speed": 300, "projectile_speed": 1000, "firing_rate": 0, "firing_angle": "player"}, 
-					{"x": 800, "y": 650, "speed": 300, "projectile_speed": 1000, "firing_rate": 2, "firing_angle": "player"}, 
-					{"x": -20, "y": 650, "speed": 150, "projectile_speed": 1000, "firing_rate": 0.1, "firing_angle": "player"}]
+					{"x": 10, "y": 11, "speed": 300, "projectile_speed": 1000, "firing_rate": 0, "firing_angle": "player", "firing_type": "burst"}, 
+					{"x": 10, "y": 8, "speed": 300, "projectile_speed": 1000, "firing_rate": 2, "firing_angle": "player", "firing_type": "burst"}, 
+					{"x": -1, "y": 8, "speed": 150, "projectile_speed": 1000, "firing_rate": 0.75, "firing_angle": "player", "firing_type": "burst"}
+				]
 			},
 			{
 				"type": "Eyeball",
-				"spawn_trigger": {"x": 340, "y": 0},
+				"enabled": true,
+				"spawn_trigger": {"x": 4, "y": 0},
 				"group": 2,
-				"end_path_behavior": "Dequeue",
+				"end_path_behavior": 1,
 				"path": [
-					{"x": 800, "y": 900, "speed": 300, "projectile_speed": 1000, "firing_rate": 0, "firing_angle": "player"}, 
-					{"x": 800, "y": 650, "speed": 300, "projectile_speed": 1000, "firing_rate": 2, "firing_angle": "player"}, 
-					{"x": -20, "y": 650, "speed": 150, "projectile_speed": 1000, "firing_rate": 0.1, "firing_angle": "player"}]
+					{"x": 10, "y": 11, "speed": 300, "projectile_speed": 1000, "firing_rate": 0, "firing_angle": "player", "firing_type": "burst"}, 
+					{"x": 10, "y": 8, "speed": 300, "projectile_speed": 1000, "firing_rate": 2, "firing_angle": "player", "firing_type": "burst"}, 
+					{"x": -1, "y": 8, "speed": 150, "projectile_speed": 1000, "firing_rate": 0.75, "firing_angle": "player", "firing_type": "burst"}
+				]
 			},
 			{
 				"type": "Eyeball",
-				"spawn_trigger": {"x": 500, "y": 0},
+				"enabled": true,
+				"spawn_trigger": {"x": 6, "y": 0},
 				"group": 2,
-				"end_path_behavior": "Dequeue",
+				"end_path_behavior": 1,
 				"path": [
-					{"x": 800, "y": 900, "speed": 300, "projectile_speed": 1000, "firing_rate": 0, "firing_angle": "player"}, 
-					{"x": 800, "y": 650, "speed": 300, "projectile_speed": 1000, "firing_rate": 2, "firing_angle": "player"}, 
-					{"x": -20, "y": 650, "speed": 150, "projectile_speed": 1000, "firing_rate": 0.1, "firing_angle": "player"}]
+					{"x": 10, "y": 11, "speed": 300, "projectile_speed": 1000, "firing_rate": 0, "firing_angle": "player", "firing_type": "burst"}, 
+					{"x": 10, "y": 8, "speed": 300, "projectile_speed": 1000, "firing_rate": 2, "firing_angle": "player", "firing_type": "burst"}, 
+					{"x": -1, "y": 8, "speed": 150, "projectile_speed": 1000, "firing_rate": 0.75, "firing_angle": "player", "firing_type": "burst"}
+				]
+			},
+			{
+				"type": "Eyeball",
+				"enabled": false,
+				"spawn_trigger": {"x": 0, "y": 0},
+				"group": 3,
+				"end_path_behavior": 3,
+				"path": [
+					{"x": 8, "y": 5, "speed": 300, "projectile_speed": 1000, "firing_rate": 1.5, "firing_angle": "player", "firing_type": "burst"},
+					{"x": 9, "y": 5, "speed": 300, "projectile_speed": 1000, "firing_rate": 1.5, "firing_angle": "player", "firing_type": "burst"}
+				]
 			}
 		],
 		"dialogues": [ {
 			"spawn_trigger": {"x": 0, "y": 0},
 			"dialogue": [
 				{"speaker": "Dolphin", "speech": "I won't let Earth down... not today"},
-				{"speaker": "Scope", "speech": "They were right..."},
+				{"speaker": "Scope", "speech": "Stay alert..."},
 			]
-		}
-		]
+		} ]
 	}
 }

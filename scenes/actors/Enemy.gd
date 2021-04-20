@@ -18,40 +18,50 @@ enum PatrolType {
 	PATROL_LOOP = 2,
 	PATROL_BACK = 3
 }
-export (PatrolType) var end_path_behavior = PatrolType.DEQUEUE
+var end_path_behavior: int = 1
+
+# burst 
+onready var cooldownTimer = $ProjectileSpawner/CooldownTimer
+var firing_type = null
+var maxBurst: int = 3
+var burstRemaining: int = 0
 
 const Echo = preload("res://scenes/projectiles/Echo.tscn")
 const Powerup = preload("res://scenes/powerups/Powerup.tscn")
 	
 func shoot():
+	if health <= 0:
+		return
+		
 	var b = Echo.instance()
 	b.set_origin("enemies")
 	get_parent().add_child(b)
 	b.global_position = $ProjectileSpawner.global_position
-	if str(firing_angle) == "player":
-		b.activeVelocity = Vector2(1, 0).rotated((PlayerManager.position - position).normalized().angle())
-	else:
-		b.activeVelocity = Vector2(-1, 0).rotated(deg2rad(firing_angle))
+	b.activeVelocity = Vector2(-1, 0).rotated(rotation)
 	b.speed = projectile_speed
 	b.active = true
 		
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	randomize()
+	randomize() 
 	if path:
 		position = path[0].patrol_point
+		firing_rate = path[0].firing_rate
+		firing_angle = path[0].firing_angle
+		firing_type = path[0].firing_type
 	else:
 		velocity = Vector2.LEFT
 		
 	$ProjectileSpawner/CooldownTimer.wait_time = firing_rate
+	$ProjectileSpawner/CooldownTimer.start()
 		
 	velocity = velocity.normalized()
 	pass # Replace with function body.
 	
 func _process(_delta):
 	pass
-
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
@@ -69,25 +79,26 @@ func _physics_process(delta):
 			
 			# are we at the end of our patrol?
 			var nextPatrolIndex = patrol_index + patrol_iterator
-			if  patrol_iterator > 0 and nextPatrolIndex > path.size()-1 or patrol_iterator < 0 and nextPatrolIndex < 0:
+			if  patrol_iterator > 0 and nextPatrolIndex >= path.size() or patrol_iterator < 0 and nextPatrolIndex < 0:
 				match end_path_behavior:
-					PatrolType.DEQUEUE:
+					1:
 						destroy()
 						return
-					PatrolType.PATROL_LOOP:
+					2:
 						nextPatrolIndex = 0
-					PatrolType.PATROL_BACK:
+					3:
 						patrol_iterator *= -1
-						nextPatrolIndex = patrol_index + patrol_iterator
+						nextPatrolIndex = patrol_index + patrol_iterator*2
 
 			patrol_index = nextPatrolIndex
 			target = path[nextPatrolIndex].patrol_point
 			speed = path[nextPatrolIndex].speed
 			firing_rate = path[nextPatrolIndex].firing_rate
 			firing_angle = path[nextPatrolIndex].firing_angle
-			$ProjectileSpawner/CooldownTimer.wait_time = firing_rate
-			$ProjectileSpawner/CooldownTimer.stop()
-			$ProjectileSpawner/CooldownTimer.start()
+#			if firing_rate > 0:
+#				$ProjectileSpawner/CooldownTimer.wait_time = firing_rate
+#				$ProjectileSpawner/CooldownTimer.autostart = true
+#				$ProjectileSpawner/CooldownTimer.start()
 		
 		var maxMovementDistance = speed * delta
 		var movementDistance = min(position.distance_to(target), maxMovementDistance)
@@ -96,12 +107,25 @@ func _physics_process(delta):
 		velocity = (target - position).normalized() * tempSpeed * delta
 		position += velocity
 		
+		if $BurstCooldownTimer.is_stopped():
+			var rotation_val = 0
+			if str(firing_angle) == "player":
+				rotation_val = (position - PlayerManager.position).angle()
+			else:
+				rotation_val = deg2rad(firing_angle)		
+				
+			rotation = rotation_val			
+#			PlayerManager.emit_signal("rotation_changed", str(rad2deg(rotation_val)) + "H: " + str($AnimatedSprite.flip_h) + "V: " + str($AnimatedSprite.flip_v) )
+
+		$AnimatedSprite.flip_v = Helpers.is_between_inclusive(rotation_degrees, -180, -91) or \
+			Helpers.is_between_inclusive(rotation_degrees, 91, 180)
 
 func destroy():
 	queue_free()
 	
 func take_damage(damage):
 	health -= damage
+	self.modulate = Color.red
 	if health <= 0:
 		kill()
 	
@@ -112,7 +136,7 @@ func kill():
 	path = null
 	health = 0
 	velocity = Vector2.ZERO
-	$HitBoxes/Area2D/CollisionShape2D.disabled = true
+	$HitBoxes/Area2D/CollisionShape2D.set_deferred("disabled", true)
 	$AnimatedSprite.modulate = Color(127, 0, 0, 127)
 	$AnimatedSprite.play("dead")	
 
@@ -128,13 +152,26 @@ func _on_AnimatedSprite_animation_finished():
 		destroy()
 
 func _on_CooldownTimer_timeout():
-	shoot()
+	if firing_type == "burst":
+		shoot()
+		burstRemaining = maxBurst - 1
+		$BurstCooldownTimer.start()
+	else:
+		shoot()
 	pass
+
+
+func _on_BurstCooldownTimer_timeout():
+	if burstRemaining > 0:
+		shoot()
+		burstRemaining -= 1
+		$BurstCooldownTimer.start()
 
 
 func _on_Area2D_area_entered(area):
 	if area.is_in_group("player_projectiles"):
 		if take_damage(area.damage):
-			area.destroy()
+			area.destroy()		
 		
-		
+func _on_HitCooldownTimer_timeout():
+	pass # Replace with function body.

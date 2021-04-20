@@ -28,10 +28,10 @@ func _process(delta):
 
 
 func _on_VisibilityNotifier2D_screen_exited():
-	$CollisionShape.disabled = true
+	$CollisionShape.set_deferred("disabled", true)
 	
 func _on_VisibilityNotifier2D_screen_entered():
-	$CollisionShape.disabled = false
+	$CollisionShape.set_deferred("disabled", false)
 
 
 func _on_BeamGeneratorTimer_timeout():

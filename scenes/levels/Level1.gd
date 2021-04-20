@@ -13,9 +13,14 @@ var velocity = Vector2(1, 0)
 var triggers: Dictionary 
 var trigger_keys: Array
 
+var time_start = 0 
+var time_now = 0 
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	
+				
+		
 	# load level objects from json  
 	var file = File.new()
 	file.open("res://data/level" + str(levelNumber) + ".json", File.READ)
@@ -26,12 +31,20 @@ func _ready():
 	if parse.error != OK:
 		return
 	
-	var level_data = parse.result
-	for vector in level_data["level"]["path"]:
-		path.push_back(Vector2(vector["x"], vector["y"]))
+	var level_data = parse.result["level"]
+	
+	speed = level_data["speed"]
+	for vector in level_data["path"]:
+		path.push_back(Vector2(
+			vector["x"] * speed, 
+			vector["y"] * speed
+		))
 		
-	for dialogues in level_data["level"]["dialogues"]:
-		var spawn_trigger = Vector2(dialogues["spawn_trigger"]["x"], dialogues["spawn_trigger"]["y"])
+	for dialogues in level_data["dialogues"]:
+		var spawn_trigger = Vector2(
+			dialogues["spawn_trigger"]["x"] * speed, 
+			dialogues["spawn_trigger"]["y"] * speed
+		)
 		
 		if !triggers.has(spawn_trigger):
 			triggers[spawn_trigger] = []
@@ -46,8 +59,14 @@ func _ready():
 		triggers[spawn_trigger].push_back(dialogueHeader)
 		
 		
-	for enemy_data in level_data["level"]["enemies"]:
-		var spawn_trigger = Vector2(enemy_data["spawn_trigger"]["x"], enemy_data["spawn_trigger"]["y"])
+	for enemy_data in level_data["enemies"]:
+		if !enemy_data["enabled"]:
+			continue
+			
+		var spawn_trigger = Vector2(
+			enemy_data["spawn_trigger"]["x"] * speed, 
+			enemy_data["spawn_trigger"]["y"] * speed
+		)
 		
 		if !triggers.has(spawn_trigger):
 			triggers[spawn_trigger] = []
@@ -58,11 +77,15 @@ func _ready():
 		
 		for enemy_path in enemy_data["path"]:
 			var enemyPathBehavior = EnemyInstancePathBehavior.new()
-			enemyPathBehavior.patrol_point = Vector2(enemy_path["x"], enemy_path["y"])
+			enemyPathBehavior.patrol_point = Vector2(
+				enemy_path["x"] * speed, 
+				enemy_path["y"] * speed
+			)
 			enemyPathBehavior.speed = enemy_path["speed"]
 			enemyPathBehavior.projectile_speed = enemy_path["projectile_speed"]
 			enemyPathBehavior.firing_angle = enemy_path["firing_angle"]
 			enemyPathBehavior.firing_rate = enemy_path["firing_rate"]
+			enemyPathBehavior.firing_type = enemy_path["firing_type"]
 			enemyHeader.path.push_back(enemyPathBehavior)
 			
 		triggers[spawn_trigger].push_back(enemyHeader)
@@ -71,23 +94,20 @@ func _ready():
 	trigger_keys = triggers.keys()
 	trigger_keys.sort()
 	
+	time_start = OS.get_unix_time()
+	
 	return
 
-
-
 # Called every frame. 'delta' is the elapsed time since0 the previous frame.
-func _process(delta):
-	if Input.is_action_just_pressed("ui_cancel"):
-		get_tree().quit() 
-	
-	if Input.is_action_just_pressed("debug_restart"):
-		get_tree().change_scene("res://scenes/levels/Level1.tscn") 
-		
+func _process(delta):		
 	move_along_level_path(delta)
-	
 	process_triggers(delta)
 	
-	$CanvasLayer/HUD.show_message($Camera2D.position)
+	# debug
+	time_now = OS.get_unix_time()
+	var time_elapsed = time_now - time_start
+	$CanvasLayer.show_message(str(time_elapsed / 60) + "m " + str(time_elapsed % 60) + "s" )
+#	$CanvasLayer/HUD.show_message($Camera2D.position)
 	
 	
 func move_along_level_path(delta):
@@ -112,6 +132,7 @@ func move_along_level_path(delta):
 	velocity = (target - position).normalized() * tempSpeed * delta
 	$Camera2D.position += velocity
 	
+	
 func process_triggers(delta):
 	if trigger_keys.size() == 0:
 		return 
@@ -133,17 +154,13 @@ func process_triggers(delta):
 	
 func spawn_enemy_from_instance_header(instance_header):
 	var enemy = Enemy.instance()
-	$Camera2D/Enemies/YSort.add_child(enemy)
-	var y = enemy.get_parent()
-	
-	enemy.position = instance_header.path[0].patrol_point
 	enemy.path = instance_header.path
-#	enemy.speed = instance_header.speed 
-#	enemy.projectile_speed = instance_header.projectile_speed
-#	enemy.firing_rate = instance_header.firing_rate
-#	enemy.firing_angle = instance_header.firing_angle 
 	enemy.group = instance_header.group
+	enemy.end_path_behavior = instance_header.end_path_behavior
+	$Camera2D/Enemies/YSort.add_child(enemy)
+	
 	
 func initiate_dialogue_from_header(header):
-	var dialogue = $CanvasLayer/HUD.show_message(header.dialogues[0].speech)
-	
+#	var dialogue = $CanvasLayer/HUD.show_message(header.dialogues[0].speech)
+	pass
+

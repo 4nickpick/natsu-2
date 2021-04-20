@@ -20,8 +20,8 @@ func destroy():
 
 
 func _on_VisibilityNotifier2D_screen_entered():
-	$CollisionShape2D.disabled = false
+	$CollisionShape2D.set_deferred("disabled", false)
 
 
 func _on_VisibilityNotifier2D_screen_exited():
-	$CollisionShape2D.disabled = true
+	$CollisionShape2D.set_deferred("disabled", true)

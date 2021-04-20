@@ -50,6 +50,7 @@ config/icon="res://icon.png"
 
 SceneManager="*res://scenes/singletons/SceneManager.tscn"
 PlayerManager="*res://scenes/singletons/PlayerManager.tscn"
+Helpers="*res://scripts/Helpers.gd"
 
 [display]
 

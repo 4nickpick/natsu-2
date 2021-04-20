@@ -1,5 +1,7 @@
 extends Node
 
+#signal rotation_changed
+
 enum Abilities {
 	CHARGE_SHOT = 0,
 	SHIELD = 1,
