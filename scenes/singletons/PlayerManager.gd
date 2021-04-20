@@ -12,6 +12,7 @@ enum PowerUps {
 	BURST = 1,
 	BURST_ANGLED = 2,
 	HYPER = 3,
+	BOMB = 4
 }
 
 enum State {

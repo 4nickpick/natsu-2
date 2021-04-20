@@ -90,7 +90,7 @@ script = ExtResource( 3 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 10 )
-frame = 1
+frame = 2
 playing = true
 
 [node name="BoundaryDetection" type="CollisionShape2D" parent="."]
@@ -109,7 +109,7 @@ position = Vector2( 15, -0.251984 )
 z_index = -1
 
 [node name="CooldownTimer" type="Timer" parent="ProjectileSpawner"]
-wait_time = 0.1
+wait_time = 0.75
 one_shot = true
 
 [node name="Shield" type="Node2D" parent="."]

@@ -37,7 +37,7 @@ onready var abilities = [
 	PlayerManager.Abilities.HEAT_SEEKING
 ] setget set_abilities
 
-onready var powerup = null setget set_powerup
+onready var powerup = PlayerManager.PowerUps.BOMB setget set_powerup
 
 enum CollisionMaskLayers {
 	PLAYER = 0,
@@ -48,6 +48,7 @@ enum CollisionMaskLayers {
 }
 
 const Echo = preload("res://scenes/projectiles/Echo.tscn")
+const Bomb = preload("res://scenes/projectiles/Bomb.tscn")
 const Hyper = preload("res://scenes/projectiles/HyperBeam.tscn")
 
 func get_input(delta):
@@ -116,15 +117,22 @@ func get_input(delta):
 func construct_current_bullet():
 	if powerup == PlayerManager.PowerUps.HYPER: # there's no point in shooting at this point
 		return
+		
+	if powerup == PlayerManager.PowerUps.BOMB: 
+		return
+	
 	currentBullet = Echo.instance()
 	currentBullet.set_origin("player")
 	currentBullet.global_position = $ProjectileSpawner.global_position
 	currentBullet.passiveVelocity = Vector2(0, 0)
-	currentBullet.activeVelocity = Vector2(1, 0)
+	currentBullet.activeVelocitsay = Vector2(1, 0)
 	owner.add_child(currentBullet)		
 	
 func update_current_bullet():
 	if powerup == PlayerManager.PowerUps.HYPER:
+		return
+		
+	if powerup == PlayerManager.PowerUps.BOMB:
 		return
 			
 	if abilities.find(PlayerManager.Abilities.CHARGE_SHOT) > -1 and currentBullet:
@@ -138,7 +146,18 @@ func update_current_bullet():
 	
 func shoot():
 	if powerup == PlayerManager.PowerUps.HYPER:
-		pass
+		return
+		
+	if powerup == PlayerManager.PowerUps.BOMB:
+		if $ProjectileSpawner/CooldownTimer.is_stopped():
+			var b = Bomb.instance()
+			b.set_origin("player")
+			get_parent().add_child(b)
+			b.global_position = $ProjectileSpawner.global_position
+			b.activeVelocity = Vector2.RIGHT
+			b.active = true
+			$ProjectileSpawner/CooldownTimer.start()
+		return
 		
 	if abilities.find(PlayerManager.Abilities.CHARGE_SHOT) > -1 and currentBullet:
 		if charge == 100:
@@ -216,6 +235,9 @@ func adjust_shield_charge(delta):
 		
 		
 func build_charge(delta):
+	if powerup == PlayerManager.PowerUps.BOMB or powerup == PlayerManager.PowerUps.HYPER:
+		return
+	
 	if Input.is_action_pressed("player_action1"):
 		self.charge += chargeBuildRate * delta 
 	else:
@@ -232,8 +254,8 @@ func build_charge(delta):
 				currentBullet.set_heat_seeking(enemies[0])
 		
 func construct_hyper_beam():
-	$AnimatedSprite.animation = "intimidate"
 	if powerup == PlayerManager.PowerUps.HYPER:
+		$AnimatedSprite.animation = "intimidate"
 		var h = Hyper.instance()
 		h.position = $ProjectileSpawner.position
 		add_child(h)

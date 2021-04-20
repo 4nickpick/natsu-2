@@ -65,7 +65,7 @@ func _input(event):
 
 
 func _on_UnpauseButton_pressed():
-	$CanvasLayer/PauseMenu.hide()
+	$PauseMenu.hide()
 	get_tree().paused = false
 
 func _on_RestartLevelButton_pressed():

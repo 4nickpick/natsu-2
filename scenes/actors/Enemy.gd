@@ -27,6 +27,7 @@ var maxBurst: int = 3
 var burstRemaining: int = 0
 
 const Echo = preload("res://scenes/projectiles/Echo.tscn")
+const Bomb = preload("res://scenes/projectiles/Bomb.tscn")
 const Powerup = preload("res://scenes/powerups/Powerup.tscn")
 	
 func shoot():
@@ -38,6 +39,18 @@ func shoot():
 	get_parent().add_child(b)
 	b.global_position = $ProjectileSpawner.global_position
 	b.activeVelocity = Vector2(-1, 0).rotated(rotation)
+	b.speed = projectile_speed
+	b.active = true
+	
+func bomb():
+	if health <= 0:
+		return
+		
+	var b = Bomb.instance()
+	b.set_origin("enemies")
+	get_parent().add_child(b)
+	b.global_position = $ProjectileSpawner.global_position
+	b.activeVelocity = Vector2(-1, 0).rotated(deg2rad(-45))
 	b.speed = projectile_speed
 	b.active = true
 		
@@ -52,9 +65,10 @@ func _ready():
 		firing_type = path[0].firing_type
 	else:
 		velocity = Vector2.LEFT
-		
-	$ProjectileSpawner/CooldownTimer.wait_time = firing_rate
-	$ProjectileSpawner/CooldownTimer.start()
+	
+	if firing_rate > 0:
+		$ProjectileSpawner/CooldownTimer.wait_time = firing_rate
+		$ProjectileSpawner/CooldownTimer.start()
 		
 	velocity = velocity.normalized()
 	pass # Replace with function body.
