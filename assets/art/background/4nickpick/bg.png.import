@@ -1,0 +1,13 @@
+[remap]
+
+importer="image"
+type="Image"
+path="res://.import/bg.png-f20bb8591960e5cae8c3b9fe6d6a4fbc.image"
+
+[deps]
+
+source_file="res://assets/art/background/4nickpick/bg.png"
+dest_files=[ "res://.import/bg.png-f20bb8591960e5cae8c3b9fe6d6a4fbc.image" ]
+
+[params]
+

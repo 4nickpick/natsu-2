@@ -1,10 +1,10 @@
 extends CanvasLayer
 
-onready var scoreUI = $HUD/HUDContainer/HeaderContainer/Score
-onready var healthUI = $HUD/HUDContainer/HeaderContainer/Score
-onready var fpsUI = $HUD/HUDContainer/HeaderContainer/FPS
-onready var countUI = $HUD/HUDContainer/HeaderContainer/Count
-onready var messageUI = $HUD/HUDContainer/FooterContainer/Message
+onready var scoreUI = $HUD/HUDContainer/FooterContainer/Score
+onready var healthUI = $HUD/HUDContainer/FooterContainer/Score
+onready var fpsUI = $HUD/HUDContainer/FooterContainer/FPS
+onready var countUI = $HUD/HUDContainer/FooterContainer/Count
+#onready var messageUI = $HUD/HUDContainer/FooterContainer/Message
 
 
 func update_score(value):
@@ -20,25 +20,26 @@ func update_health(value):
 	healthUI.text = "Health: " + str(value) 
 	
 func update_charge(value):
-	$HUD/HUDContainer/HeaderContainer/Count.text = "Charge: " + "%.2f" % value
+	$HUD/HUDContainer/FooterContainer/Count.text = "Charge: " + "%.2f" % value
 	
 func update_rotation(value):
-	$HUD/HUDContainer/HeaderContainer/Count.text = str(value)
+	$HUD/HUDContainer/FooterContainer/Count.text = str(value)
 	
 func update_powerup(value):
-#	$HUDContainer/HeaderContainer/Health.text = "Health: " + str(health) 
+#	$HUDContainer/FooterContainer/Health.text = "Health: " + str(health) 
 	pass
 	
 func update_abilities(value):
-#	$HUDContainer/HeaderContainer/Health.text = "Health: " + str(health) 
+#	$HUDContainer/FooterContainer/Health.text = "Health: " + str(health) 
 	pass
 	
 func update_shield(value):
-#	$HUDContainer/HeaderContainer/Health.text = "Health: " + str(health) 
+#	$HUDContainer/FooterContainer/Health.text = "Health: " + str(health) 
 	pass
 	
 func show_message(message):
-	$HUD/HUDContainer/FooterContainer/Message.text = str(message)
+#	$HUD/HUDContainer/FooterContainer/Message.text = str(message)
+	pass
 
 # Called when the node enters the scene tree for the first time.
 func _ready():	
@@ -69,10 +70,13 @@ func _on_UnpauseButton_pressed():
 	get_tree().paused = false
 
 func _on_RestartLevelButton_pressed():
+	$PauseMenu.hide()
 	get_tree().paused = false
-	get_tree().change_scene("res://scenes/levels/Level1.tscn") 
+	SceneManager.goto_scene("res://scenes/levels/Level1.tscn") 
 
 func _on_QuitButton_pressed():
-	get_tree().quit() 
+	$PauseMenu.hide()
+	get_tree().paused = false
+	SceneManager.goto_scene("res://scenes/Main.tscn") 
 
 	

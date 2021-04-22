@@ -106,7 +106,7 @@ func _process(delta):
 	# debug
 	time_now = OS.get_unix_time()
 	var time_elapsed = time_now - time_start
-	$CanvasLayer.show_message(str(time_elapsed / 60) + "m " + str(time_elapsed % 60) + "s" )
+#	$CanvasLayer.show_message(str(time_elapsed / 60) + "m " + str(time_elapsed % 60) + "s" )
 #	$CanvasLayer/HUD.show_message($Camera2D.position)
 	
 	
