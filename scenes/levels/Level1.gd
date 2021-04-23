@@ -2,6 +2,7 @@ extends Node2D
 
 export (int) var levelNumber = 1
 const Enemy = preload("res://scenes/actors/Enemy.tscn")
+const BigEnemy = preload("res://scenes/actors/BigEnemy.tscn")
 
 # camera management
 var path: PoolVector2Array
@@ -72,6 +73,7 @@ func _ready():
 			triggers[spawn_trigger] = []
 		
 		var enemyHeader = EnemyInstanceHeader.new()
+		enemyHeader.type = enemy_data["type"]
 		enemyHeader.group = enemy_data["group"]
 		enemyHeader.end_path_behavior = enemy_data["end_path_behavior"]
 		
@@ -111,6 +113,9 @@ func _process(delta):
 	
 	
 func move_along_level_path(delta):
+	if not path:
+		return 
+	
 	var target = path[current_path_index]
 	var distance = $Camera2D.position.distance_to(target)
 	
@@ -153,7 +158,13 @@ func process_triggers(delta):
 	return
 	
 func spawn_enemy_from_instance_header(instance_header):
-	var enemy = Enemy.instance()
+	var enemy = null
+	match instance_header.type:
+		"Eyeball":
+			enemy = Enemy.instance()
+		"BigRobot":
+			enemy = BigEnemy.instance()
+	
 	enemy.path = instance_header.path
 	enemy.group = instance_header.group
 	enemy.end_path_behavior = instance_header.end_path_behavior

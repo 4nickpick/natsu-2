@@ -156,8 +156,8 @@ func kill():
 
 func _on_AnimatedSprite_animation_finished():
 	if $AnimatedSprite.animation == "dead":
-		if path:
-			var powerupNode = get_node(path)
+		if powerup:
+			var powerupNode = get_node(powerup)
 			if powerupNode:
 				powerupNode.visible = true
 				powerupNode.global_position = global_position
