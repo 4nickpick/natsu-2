@@ -1,9 +1,11 @@
 extends CanvasLayer
 
-onready var scoreUI = $HUD/HUDContainer/FooterContainer/Score
-onready var healthUI = $HUD/HUDContainer/FooterContainer/Score
-onready var fpsUI = $HUD/HUDContainer/FooterContainer/FPS
-onready var countUI = $HUD/HUDContainer/FooterContainer/Count
+onready var scoreUI = $HUD/UI/Score
+onready var healthUI = $HUD/UI/Health
+onready var fpsUI = $HUD/UI/FPS
+onready var countUI = $HUD/UI/Count
+onready var chargeUI = $HUD/UI/ChargeProgress
+onready var shieldUI = $HUD/UI/ShieldProgress
 #onready var messageUI = $HUD/HUDContainer/FooterContainer/Message
 
 
@@ -20,10 +22,11 @@ func update_health(value):
 	healthUI.text = "Health: " + str(value) 
 	
 func update_charge(value):
-	$HUD/HUDContainer/FooterContainer/Count.text = "Charge: " + "%.2f" % value
+	chargeUI.value = value
 	
 func update_rotation(value):
-	$HUD/HUDContainer/FooterContainer/Count.text = str(value)
+#	$HUD/HUDContainer/FooterContainer/Count.text = str(value)
+	pass
 	
 func update_powerup(value):
 #	$HUDContainer/FooterContainer/Health.text = "Health: " + str(health) 
@@ -34,7 +37,7 @@ func update_abilities(value):
 	pass
 	
 func update_shield(value):
-#	$HUDContainer/FooterContainer/Health.text = "Health: " + str(health) 
+	shieldUI.value = value
 	pass
 	
 func show_message(message):

@@ -1,0 +1,13 @@
+[remap]
+
+importer="image"
+type="Image"
+path="res://.import/progress_bar_over_shield.png-0161320771b880593e0328ec19305070.image"
+
+[deps]
+
+source_file="res://assets/art/hud/progress_bar_over_shield.png"
+dest_files=[ "res://.import/progress_bar_over_shield.png-0161320771b880593e0328ec19305070.image" ]
+
+[params]
+

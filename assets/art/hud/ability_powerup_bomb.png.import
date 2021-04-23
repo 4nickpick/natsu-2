@@ -1,0 +1,13 @@
+[remap]
+
+importer="image"
+type="Image"
+path="res://.import/ability_powerup_bomb.png-df4f52df0268c6820413d459dff69d30.image"
+
+[deps]
+
+source_file="res://assets/art/hud/ability_powerup_bomb.png"
+dest_files=[ "res://.import/ability_powerup_bomb.png-df4f52df0268c6820413d459dff69d30.image" ]
+
+[params]
+

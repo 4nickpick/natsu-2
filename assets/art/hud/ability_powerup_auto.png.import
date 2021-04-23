@@ -1,0 +1,13 @@
+[remap]
+
+importer="image"
+type="Image"
+path="res://.import/ability_powerup_auto.png-02258e56b6cf71ac96f867b9f001f5b6.image"
+
+[deps]
+
+source_file="res://assets/art/hud/ability_powerup_auto.png"
+dest_files=[ "res://.import/ability_powerup_auto.png-02258e56b6cf71ac96f867b9f001f5b6.image" ]
+
+[params]
+

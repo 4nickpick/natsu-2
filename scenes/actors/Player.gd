@@ -37,7 +37,7 @@ onready var abilities = [
 	PlayerManager.Abilities.HEAT_SEEKING
 ] setget set_abilities
 
-onready var powerup = PlayerManager.PowerUps.BOMB setget set_powerup
+onready var powerup = null setget set_powerup
 
 enum CollisionMaskLayers {
 	PLAYER = 0,
@@ -125,7 +125,7 @@ func construct_current_bullet():
 	currentBullet.set_origin("player")
 	currentBullet.global_position = $ProjectileSpawner.global_position
 	currentBullet.passiveVelocity = Vector2(0, 0)
-	currentBullet.activeVelocitsay = Vector2(1, 0)
+	currentBullet.activeVelocity = Vector2(1, 0)
 	owner.add_child(currentBullet)		
 	
 func update_current_bullet():

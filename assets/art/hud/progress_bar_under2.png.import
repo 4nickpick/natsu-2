@@ -1,0 +1,13 @@
+[remap]
+
+importer="image"
+type="Image"
+path="res://.import/progress_bar_under2.png-20aacf969fc8f56e35f89083d0c0018d.image"
+
+[deps]
+
+source_file="res://assets/art/hud/progress_bar_under2.png"
+dest_files=[ "res://.import/progress_bar_under2.png-20aacf969fc8f56e35f89083d0c0018d.image" ]
+
+[params]
+

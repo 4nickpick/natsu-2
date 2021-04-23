@@ -1,0 +1,13 @@
+[remap]
+
+importer="image"
+type="Image"
+path="res://.import/player-icon.png-78f66a7d3bb07d955565aa42b226b7d4.image"
+
+[deps]
+
+source_file="res://assets/art/player/4nickpick/player-icon.png"
+dest_files=[ "res://.import/player-icon.png-78f66a7d3bb07d955565aa42b226b7d4.image" ]
+
+[params]
+
