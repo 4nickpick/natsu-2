@@ -48,7 +48,7 @@ script = ExtResource( 3 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 5 )
-frame = 1
+frame = 2
 playing = true
 
 [node name="BoundaryDetection" type="CollisionShape2D" parent="."]
@@ -81,6 +81,9 @@ autostart = true
 process_mode = 0
 wait_time = 0.15
 one_shot = true
+
+[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+position = Vector2( -1.51191, -2.01588 )
 [connection signal="animation_finished" from="AnimatedSprite" to="." method="_on_AnimatedSprite_animation_finished"]
 [connection signal="area_entered" from="HitBoxes/Area2D" to="." method="_on_Area2D_area_entered"]
 [connection signal="timeout" from="ProjectileSpawner/CooldownTimer" to="." method="_on_CooldownTimer_timeout"]

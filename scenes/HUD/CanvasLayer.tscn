@@ -23,6 +23,16 @@ script = ExtResource( 2 )
 
 [node name="HUD" parent="." instance=ExtResource( 1 )]
 
+[node name="Backdrop" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 0 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tween" type="Tween" parent="Backdrop"]
+
 [node name="PauseMenu" type="Popup" parent="."]
 pause_mode = 2
 anchor_right = 1.0
@@ -52,9 +62,9 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PauseMenu/MarginContainer/CenterContainer"]
-margin_left = 824.0
+margin_left = 784.0
 margin_top = 464.0
-margin_right = 1096.0
+margin_right = 1136.0
 margin_bottom = 615.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -62,7 +72,7 @@ custom_constants/separation = 25
 alignment = 1
 
 [node name="Label" type="Label" parent="PauseMenu/MarginContainer/CenterContainer/VBoxContainer"]
-margin_right = 272.0
+margin_right = 352.0
 margin_bottom = 10.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -73,7 +83,7 @@ valign = 1
 
 [node name="UnpauseButton" type="Button" parent="PauseMenu/MarginContainer/CenterContainer/VBoxContainer"]
 margin_top = 35.0
-margin_right = 272.0
+margin_right = 352.0
 margin_bottom = 57.0
 custom_fonts/font = SubResource( 4 )
 text = "Resume"
@@ -83,7 +93,7 @@ __meta__ = {
 
 [node name="RestartLevelButton" type="Button" parent="PauseMenu/MarginContainer/CenterContainer/VBoxContainer"]
 margin_top = 82.0
-margin_right = 272.0
+margin_right = 352.0
 margin_bottom = 104.0
 custom_fonts/font = SubResource( 4 )
 text = "Restart Level"
@@ -94,13 +104,148 @@ __meta__ = {
 [node name="QuitButton" type="Button" parent="PauseMenu/MarginContainer/CenterContainer/VBoxContainer"]
 pause_mode = 2
 margin_top = 129.0
-margin_right = 272.0
+margin_right = 352.0
 margin_bottom = 151.0
 custom_fonts/font = SubResource( 4 )
-text = "Quit"
+text = "Back to Main Menu"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="GameOverMenu" type="Popup" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DelayTimer" type="Timer" parent="GameOverMenu"]
+wait_time = 2.0
+one_shot = true
+
+[node name="CenterContainer" type="CenterContainer" parent="GameOverMenu"]
+margin_top = -2.51978
+margin_right = 1920.0
+margin_bottom = 1077.48
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameOverMenu/CenterContainer"]
+margin_left = 784.0
+margin_top = 488.0
+margin_right = 1136.0
+margin_bottom = 592.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 25
+alignment = 1
+
+[node name="Label" type="Label" parent="GameOverMenu/CenterContainer/VBoxContainer"]
+margin_right = 352.0
+margin_bottom = 10.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 2 )
+text = "GAME OVER"
+align = 1
+valign = 1
+
+[node name="RestartLevelButton" type="Button" parent="GameOverMenu/CenterContainer/VBoxContainer"]
+margin_top = 35.0
+margin_right = 352.0
+margin_bottom = 57.0
+custom_fonts/font = SubResource( 4 )
+text = "Restart Level"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="QuitButton" type="Button" parent="GameOverMenu/CenterContainer/VBoxContainer"]
+pause_mode = 2
+margin_top = 82.0
+margin_right = 352.0
+margin_bottom = 104.0
+custom_fonts/font = SubResource( 4 )
+text = "Back to Main Menu"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VictoryMenu" type="Popup" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DelayTimer" type="Timer" parent="VictoryMenu"]
+wait_time = 2.0
+one_shot = true
+
+[node name="CenterContainer" type="CenterContainer" parent="VictoryMenu"]
+margin_top = -2.51978
+margin_right = 1920.0
+margin_bottom = 1077.48
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VictoryMenu/CenterContainer"]
+margin_left = 784.0
+margin_top = 468.0
+margin_right = 1136.0
+margin_bottom = 611.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 25
+alignment = 1
+
+[node name="Label" type="Label" parent="VictoryMenu/CenterContainer/VBoxContainer"]
+margin_right = 352.0
+margin_bottom = 10.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 2 )
+text = "LEVEL COMPLETE"
+align = 1
+valign = 1
+
+[node name="LabelScore" type="Label" parent="VictoryMenu/CenterContainer/VBoxContainer"]
+margin_right = 40.0
+margin_bottom = 14.0
+
+[node name="RestartLevelButton" type="Button" parent="VictoryMenu/CenterContainer/VBoxContainer"]
+margin_top = 35.0
+margin_right = 352.0
+margin_bottom = 57.0
+custom_fonts/font = SubResource( 4 )
+text = "Restart Level"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="QuitButton" type="Button" parent="VictoryMenu/CenterContainer/VBoxContainer"]
+pause_mode = 2
+margin_top = 82.0
+margin_right = 352.0
+margin_bottom = 104.0
+custom_fonts/font = SubResource( 4 )
+text = "Back to Main Menu"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="tween_completed" from="Backdrop/Tween" to="." method="_on_Tween_tween_completed"]
 [connection signal="pressed" from="PauseMenu/MarginContainer/CenterContainer/VBoxContainer/UnpauseButton" to="." method="_on_UnpauseButton_pressed"]
 [connection signal="pressed" from="PauseMenu/MarginContainer/CenterContainer/VBoxContainer/RestartLevelButton" to="." method="_on_RestartLevelButton_pressed"]
 [connection signal="pressed" from="PauseMenu/MarginContainer/CenterContainer/VBoxContainer/QuitButton" to="." method="_on_QuitButton_pressed"]
+[connection signal="timeout" from="GameOverMenu/DelayTimer" to="." method="_on_GameOverMenu_DelayTimer_timeout"]
+[connection signal="pressed" from="GameOverMenu/CenterContainer/VBoxContainer/RestartLevelButton" to="." method="_on_RestartLevelButton_pressed"]
+[connection signal="pressed" from="GameOverMenu/CenterContainer/VBoxContainer/QuitButton" to="." method="_on_QuitButton_pressed"]
+[connection signal="timeout" from="VictoryMenu/DelayTimer" to="." method="_on_VictoryMenu_DelayTimer_timeout"]
+[connection signal="pressed" from="VictoryMenu/CenterContainer/VBoxContainer/RestartLevelButton" to="." method="_on_RestartLevelButton_pressed"]
+[connection signal="pressed" from="VictoryMenu/CenterContainer/VBoxContainer/QuitButton" to="." method="_on_QuitButton_pressed"]

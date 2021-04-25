@@ -10,6 +10,16 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Resource",
+"class": "BossInstanceHeader",
+"language": "GDScript",
+"path": "res://scripts/BossInstanceHeader.gd"
+}, {
+"base": "Resource",
+"class": "BossInstancePhaseBehavior",
+"language": "GDScript",
+"path": "res://scripts/BossInstancePhaseBehavior.gd"
+}, {
+"base": "Resource",
 "class": "DialogueHeader",
 "language": "GDScript",
 "path": "res://scripts/DialogueHeader.gd"
@@ -30,6 +40,8 @@ _global_script_classes=[ {
 "path": "res://scripts/EnemyInstancePathBehavior.gd"
 } ]
 _global_script_class_icons={
+"BossInstanceHeader": "",
+"BossInstancePhaseBehavior": "",
 "DialogueHeader": "",
 "DialogueLine": "",
 "EnemyInstanceHeader": "",

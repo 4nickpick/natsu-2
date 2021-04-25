@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/fonts/dogica/dogica.tres" type="Theme" id=1]
+[ext_resource path="res://scenes/HUD/ScoreLabel.gd" type="Script" id=2]
+
+[node name="ScoreLabel" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Label" type="Label" parent="."]
+margin_right = 92.0
+margin_bottom = 19.0
+theme = ExtResource( 1 )
+text = "+100"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TweenRise" type="Tween" parent="."]
+[connection signal="tween_completed" from="TweenRise" to="." method="_on_TweenRise_tween_completed"]

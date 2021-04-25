@@ -92,10 +92,8 @@ size = Vector2( 80, 80 )
 [node name="UI" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -2.59084
-margin_top = -2.11896
-margin_right = -2.59082
-margin_bottom = -2.1189
+margin_left = -2.0
+margin_right = -2.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -106,6 +104,10 @@ __meta__ = {
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = 2.0
+margin_top = 34.0
+margin_right = 2.0
+margin_bottom = 34.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 color = Color( 0.0980392, 0.462745, 0.0666667, 1 )
@@ -114,10 +116,10 @@ __meta__ = {
 }
 
 [node name="Player Image" type="TextureRect" parent="UI"]
-margin_left = 69.9028
-margin_top = 782.335
-margin_right = 309.903
-margin_bottom = 1022.33
+margin_left = 71.9028
+margin_top = 816.335
+margin_right = 311.903
+margin_bottom = 1056.33
 size_flags_horizontal = 0
 texture = SubResource( 2 )
 __meta__ = {
@@ -125,40 +127,36 @@ __meta__ = {
 }
 
 [node name="Count" type="Label" parent="UI"]
-margin_left = 1313.83
-margin_top = 919.872
-margin_right = 1811.83
-margin_bottom = 937.872
+margin_left = 1315.83
+margin_top = 953.872
+margin_right = 1813.83
+margin_bottom = 971.872
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 4 )
 text = "Count: 100"
 align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Score" type="Label" parent="UI"]
-margin_left = 1311.67
-margin_top = 797.824
-margin_right = 1834.67
-margin_bottom = 815.824
+margin_left = 1317.67
+margin_top = 871.824
+margin_right = 1840.67
+margin_bottom = 889.824
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 4 )
 text = "Score: 1000"
 align = 1
-
-[node name="Health" type="Label" parent="UI"]
-margin_left = 1248.39
-margin_top = 837.455
-margin_right = 1854.39
-margin_bottom = 855.455
-size_flags_horizontal = 3
-custom_fonts/font = SubResource( 4 )
-text = "Health: 100"
-align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="FPS" type="Label" parent="UI"]
-margin_left = 1294.0
-margin_top = 874.0
-margin_right = 1878.0
-margin_bottom = 892.0
+margin_left = 1296.0
+margin_top = 914.0
+margin_right = 1880.0
+margin_bottom = 932.0
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 4 )
 text = "FPS: 100"
@@ -168,11 +166,11 @@ __meta__ = {
 }
 
 [node name="ChargeProgress" type="TextureProgress" parent="UI"]
-margin_left = 386.532
-margin_top = 781.086
-margin_right = 426.532
-margin_bottom = 1023.09
-rect_min_size = Vector2( 40, 200 )
+margin_left = 391.0
+margin_top = 895.0
+margin_right = 431.0
+margin_bottom = 1055.0
+rect_min_size = Vector2( 40, 160 )
 min_value = 1.0
 step = 0.1
 value = 60.0
@@ -186,11 +184,11 @@ __meta__ = {
 }
 
 [node name="ShieldProgress" type="TextureProgress" parent="UI"]
-margin_left = 328.188
-margin_top = 783.762
-margin_right = 368.188
-margin_bottom = 1023.76
-rect_min_size = Vector2( 40, 200 )
+margin_left = 332.0
+margin_top = 896.0
+margin_right = 372.0
+margin_bottom = 1056.0
+rect_min_size = Vector2( 40, 160 )
 rect_pivot_offset = Vector2( 546.919, 461.168 )
 step = 0.1
 value = 80.0
@@ -204,10 +202,10 @@ __meta__ = {
 
 [node name="HealthProgress" type="TextureProgress" parent="UI"]
 modulate = Color( 1, 0.0235294, 0.0235294, 1 )
-margin_left = 32.5281
-margin_top = 778.416
-margin_right = 72.5281
-margin_bottom = 1026.42
+margin_left = 33.0
+margin_top = 818.0
+margin_right = 73.0
+margin_bottom = 1058.0
 rect_min_size = Vector2( 40, 200 )
 rect_pivot_offset = Vector2( 546.919, 461.168 )
 max_value = 3.0
@@ -222,11 +220,11 @@ __meta__ = {
 }
 
 [node name="AbilityProgress" type="TextureProgress" parent="UI"]
-margin_left = 452.193
-margin_top = 827.813
-margin_right = 532.193
-margin_bottom = 907.813
-rect_min_size = Vector2( 80, 80 )
+margin_left = 464.193
+margin_top = 897.813
+margin_right = 524.193
+margin_bottom = 957.813
+rect_min_size = Vector2( 60, 60 )
 step = 0.1
 value = 100.0
 texture_under = SubResource( 12 )
@@ -238,11 +236,11 @@ __meta__ = {
 }
 
 [node name="AbilityProgress2" type="TextureProgress" parent="UI"]
-margin_left = 579.335
-margin_top = 940.64
-margin_right = 659.335
-margin_bottom = 1020.64
-rect_min_size = Vector2( 80, 80 )
+margin_left = 567.335
+margin_top = 990.64
+margin_right = 627.335
+margin_bottom = 1050.64
+rect_min_size = Vector2( 60, 60 )
 step = 0.1
 value = 100.0
 texture_under = SubResource( 12 )
@@ -254,11 +252,11 @@ __meta__ = {
 }
 
 [node name="PowerupProgress" type="TextureProgress" parent="UI"]
-margin_left = 447.962
-margin_top = 932.164
-margin_right = 527.962
-margin_bottom = 1012.16
-rect_min_size = Vector2( 80, 80 )
+margin_left = 464.0
+margin_top = 990.0
+margin_right = 524.0
+margin_bottom = 1050.0
+rect_min_size = Vector2( 60, 60 )
 step = 0.1
 value = 100.0
 texture_under = SubResource( 12 )
@@ -270,11 +268,11 @@ __meta__ = {
 }
 
 [node name="PowerupProgress2" type="TextureProgress" parent="UI"]
-margin_left = 575.097
-margin_top = 830.456
-margin_right = 655.097
-margin_bottom = 910.456
-rect_min_size = Vector2( 80, 80 )
+margin_left = 567.097
+margin_top = 900.456
+margin_right = 627.097
+margin_bottom = 960.456
+rect_min_size = Vector2( 60, 60 )
 step = 0.1
 value = 100.0
 texture_under = SubResource( 12 )
@@ -286,10 +284,10 @@ __meta__ = {
 }
 
 [node name="PowerupOneCount" type="Label" parent="UI"]
-margin_left = 685.521
-margin_top = 864.927
-margin_right = 754.521
-margin_bottom = 883.927
+margin_left = 659.521
+margin_top = 924.927
+margin_right = 728.521
+margin_bottom = 943.927
 theme = ExtResource( 1 )
 text = "x 1"
 __meta__ = {
@@ -297,12 +295,23 @@ __meta__ = {
 }
 
 [node name="PowerupOneCount2" type="Label" parent="UI"]
-margin_left = 689.759
-margin_top = 968.754
-margin_right = 758.759
-margin_bottom = 987.754
+margin_left = 659.759
+margin_top = 1008.75
+margin_right = 728.759
+margin_bottom = 1027.75
 theme = ExtResource( 1 )
 text = "x 1"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Message" type="Label" parent="UI"]
+margin_left = 350.0
+margin_top = 842.0
+margin_right = 1017.0
+margin_bottom = 861.0
+theme = ExtResource( 1 )
+text = "Oh my god, it's got a knife!!"
 __meta__ = {
 "_edit_use_anchors_": false
 }

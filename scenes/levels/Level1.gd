@@ -3,6 +3,7 @@ extends Node2D
 export (int) var levelNumber = 1
 const Enemy = preload("res://scenes/actors/Enemy.tscn")
 const BigEnemy = preload("res://scenes/actors/BigEnemy.tscn")
+const Boss = preload("res://scenes/actors/Boss.tscn")
 
 # camera management
 var path: PoolVector2Array
@@ -92,6 +93,12 @@ func _ready():
 			
 		triggers[spawn_trigger].push_back(enemyHeader)
 		
+	var bossTrigger = path[path.size()-1]
+	var bossHeader = BossInstanceHeader.new()
+	bossHeader.type = level_data["boss"]["type"]
+	triggers[bossTrigger] = []
+	triggers[bossTrigger].push_back(bossHeader)
+	
 	# prep game generation
 	trigger_keys = triggers.keys()
 	trigger_keys.sort()
@@ -144,13 +151,15 @@ func process_triggers(delta):
 		
 	var next_trigger = trigger_keys[0]
 		
-	if $Camera2D.position.x > next_trigger.x:
+	if $Camera2D.position.x > next_trigger.x - 1:
 		trigger_keys.pop_front() # we're processing this now
 		var triggers_up = triggers[next_trigger]
 		
 		for trigger in triggers_up:
 			if trigger is EnemyInstanceHeader:
 				spawn_enemy_from_instance_header(trigger)
+			if trigger is BossInstanceHeader:
+				spawn_boss_from_instance_header(trigger)
 			elif trigger is DialogueHeader:
 				initiate_dialogue_from_header(trigger)
 				
@@ -171,7 +180,14 @@ func spawn_enemy_from_instance_header(instance_header):
 	$Camera2D/Enemies/YSort.add_child(enemy)
 	
 	
+func spawn_boss_from_instance_header(instance_header):
+	var enemy = null
+	match instance_header.type:
+		"KingCrab":
+			enemy = Boss.instance()
+	$Camera2D/Enemies/YSort.add_child(enemy)
+	
 func initiate_dialogue_from_header(header):
-#	var dialogue = $CanvasLayer/HUD.show_message(header.dialogues[0].speech)
+	var dialogue = $CanvasLayer.show_message(header.dialogues[0].speech)
 	pass
 

@@ -14,16 +14,16 @@ animations = [ {
 } ]
 
 [sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 10, 948.058 )
+extents = Vector2( 10, 409.878 )
 
 [sub_resource type="RectangleShape2D" id=3]
-extents = Vector2( 10, 690.103 )
+extents = Vector2( 10, 414.263 )
 
 [sub_resource type="RectangleShape2D" id=4]
-extents = Vector2( 1029.7, 10 )
+extents = Vector2( 970.755, 10.628 )
 
 [sub_resource type="RectangleShape2D" id=5]
-extents = Vector2( 1396.21, 10 )
+extents = Vector2( 1016.62, 10 )
 
 [node name="Level1" type="Node2D"]
 script = ExtResource( 2 )
@@ -37,9 +37,9 @@ __meta__ = {
 motion_mirroring = Vector2( 2480, 1200 )
 
 [node name="BackgroundColor" type="ColorRect" parent="ParallaxBackground/ParallaxLayer2"]
-margin_top = -0.314987
+margin_top = -2.20274
 margin_right = 4096.0
-margin_bottom = 1202.07
+margin_bottom = 1200.18
 color = Color( 0.235294, 0.631373, 0.784314, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -83,15 +83,15 @@ position = Vector2( 10, 400 )
 shape = SubResource( 2 )
 
 [node name="Right" type="CollisionShape2D" parent="Camera2D/Boundaries"]
-position = Vector2( 1911.35, 405.782 )
+position = Vector2( 1911.35, 408.16 )
 shape = SubResource( 3 )
 
 [node name="Bottom" type="CollisionShape2D" parent="Camera2D/Boundaries"]
-position = Vector2( 1048.89, 1071.36 )
+position = Vector2( 979.729, 801.568 )
 shape = SubResource( 4 )
 
 [node name="Bottom2" type="CollisionShape2D" parent="Camera2D/Boundaries"]
-position = Vector2( 643.175, 10 )
+position = Vector2( 986.745, 10 )
 shape = SubResource( 5 )
 
 [node name="Player" parent="Camera2D" instance=ExtResource( 1 )]

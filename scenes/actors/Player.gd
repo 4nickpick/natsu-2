@@ -8,7 +8,9 @@ var speed = maxSpeed
 var velocity = Vector2()
 
 # health
-onready var health = 4 setget set_health
+onready var lives = 3 setget set_lives
+onready var health = 3 setget set_health
+onready var score = 0 setget set_score
 
 # shield
 onready var shield = 100 setget set_shield
@@ -274,7 +276,6 @@ func _ready():
 	PlayerManager.abilities = abilities
 	PlayerManager.powerup = powerup
 	
-	
 	setShieldState(PlayerManager.ShieldState.INACTIVE)
 	add_to_group("player")
 	
@@ -295,7 +296,7 @@ func _physics_process(delta):
 func take_damage(damage):
 	var is_vulnerable = state == PlayerManager.State.DEFAULT
 	if is_vulnerable: 
-		health = health - damage
+		self.health = health - damage
 		
 		if health > 0:
 			$HitCooldownTimer.start()	
@@ -315,6 +316,9 @@ func take_damage(damage):
 			self.charge = 0
 			chargeMultiplier = 1
 			heatSeekingIndex = 0
+			
+		else:
+			kill()
 		
 	return is_vulnerable
 	
@@ -364,6 +368,10 @@ func set_shield(value):
 	shield = value
 	PlayerManager.shield = value
 	
+func set_score(value):
+	score = value
+	PlayerManager.score = value
+	
 func set_charge(value):
 	charge = value
 	PlayerManager.charge = value
@@ -376,8 +384,12 @@ func set_powerup(value):
 	powerup = value
 	PlayerManager.powerup = value
 	
+func set_lives(value):
+	lives = value
+	PlayerManager.lives = value
+	
 func kill():
-		emit_signal("died")
+		PlayerManager.died()
 		destroy()
 	
 	
@@ -417,6 +429,7 @@ func _on_Area2D_area_entered(area):
 
 func _on_ActiveHitBox_area_entered(area):
 	if area.is_in_group("enemy_projectiles"):
+		self.score += area.point_value / 2
 		area.destroy()
 	pass # Replace with function baody.
 

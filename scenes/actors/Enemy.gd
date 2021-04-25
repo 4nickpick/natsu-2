@@ -2,6 +2,7 @@ extends Area2D
 
 export (int) var health = 2
 export (float) var speed = 150
+export (float) var point_value = 100
 export (float) var projectile_speed = 1000
 export (float) var firing_rate = .1
 export var firing_angle = 0
@@ -29,9 +30,13 @@ var burstRemaining: int = 0
 const Echo = preload("res://scenes/projectiles/Echo.tscn")
 const Bomb = preload("res://scenes/projectiles/Bomb.tscn")
 const Powerup = preload("res://scenes/powerups/Powerup.tscn")
+const ScoreLabel = preload("res://scenes/HUD/ScoreLabel.tscn")
 	
 func shoot():
 	if health <= 0:
+		return
+		
+	if PlayerManager.health <= 0:
 		return
 		
 	var b = Echo.instance()
@@ -58,6 +63,8 @@ func bomb():
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize() 
+	PlayerManager.connect("died", self, "set_exit_route")
+	
 	if path:
 		position = path[0].patrol_point
 		firing_rate = path[0].firing_rate
@@ -141,6 +148,7 @@ func take_damage(damage):
 	health -= damage
 	self.modulate = Color.red
 	if health <= 0:
+		PlayerManager.add_score(point_value)
 		kill()
 	
 	return true
@@ -153,6 +161,36 @@ func kill():
 	$HitBoxes/Area2D/CollisionShape2D.set_deferred("disabled", true)
 	$AnimatedSprite.modulate = Color(127, 0, 0, 127)
 	$AnimatedSprite.play("dead")	
+	
+	var scoreLabel = ScoreLabel.instance()
+	get_tree().get_root().add_child(scoreLabel)
+	scoreLabel.position = position	
+	scoreLabel.get_node("Label").text = "+" + str(point_value)
+	scoreLabel.start()
+
+func set_exit_route():
+	if $VisibilityNotifier2D.visible: 
+		set_deferred("path", null)
+		
+		var leave = randi() % 2
+		if leave == 1:
+			# wander about on screen
+			var new_path = []
+			for i in range(3):
+				var enemyPathBehavior = EnemyInstancePathBehavior.new()
+				enemyPathBehavior.patrol_point = Vector2((randi() % 1280), (randi() % 600))
+				enemyPathBehavior.speed = randi() % 300				
+				enemyPathBehavior.firing_angle = randi() % 360				
+				enemyPathBehavior.firing_type = null				
+				new_path.push_back(enemyPathBehavior);
+				
+			set_deferred("path", new_path)
+			set_deferred("patrol_index", 0)
+			set_deferred("patrol_iterator", 1)
+		else:
+			set_deferred("velocity", Vector2.DOWN.rotated(randi() % 360))
+			set_deferred("speed", randi() % 300)
+			# leave the screen
 
 func _on_AnimatedSprite_animation_finished():
 	if $AnimatedSprite.animation == "dead":

@@ -34,6 +34,13 @@ signal state_changed
 
 onready var health = 3 setget set_health
 signal health_changed 
+signal died 
+
+onready var lives = 3 setget set_lives
+signal lives_changed 
+
+onready var score = 0 setget set_score
+signal score_changed
 
 onready var charge = 0 setget set_charge
 signal charge_changed(value)
@@ -47,6 +54,8 @@ signal powerup_changed
 onready var abilities = [] setget set_abilities
 signal abilities_changed 
 
+signal level_complete
+
 onready var position = 0 setget set_position
 
 
@@ -55,6 +64,18 @@ func set_state(value):
 	emit_signal("state_changed", value)
 
 func set_health(value):
+	health = value
+	emit_signal("health_changed", value)
+	
+func set_score(value):
+	score = value
+	emit_signal("score_changed", score)
+	
+func add_score(value):
+	score += value
+	emit_signal("score_changed", score)
+	
+func set_lives(value):
 	health = value
 	emit_signal("health_changed", value)
 	
@@ -76,6 +97,12 @@ func set_abilities(value):
 	
 func set_position(value):
 	position = value
+	
+func died():
+	emit_signal("died")
+	
+func level_complete():
+	emit_signal("level_complete")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

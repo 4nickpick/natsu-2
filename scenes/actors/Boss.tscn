@@ -1,27 +1,27 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
-[ext_resource path="res://assets/art/enemies/creatures/creatures edit_0_transparent.png" type="Texture" id=1]
-[ext_resource path="res://scenes/actors/Enemy.gd" type="Script" id=3]
+[ext_resource path="res://scenes/actors/Boss.gd" type="Script" id=1]
+[ext_resource path="res://assets/art/enemies/creatures/creatures edit_0_transparent.png" type="Texture" id=2]
 
 [sub_resource type="AtlasTexture" id=1]
 flags = 4
-atlas = ExtResource( 1 )
-region = Rect2( 0, 800, 32, 32 )
+atlas = ExtResource( 2 )
+region = Rect2( 0, 896, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=2]
 flags = 4
-atlas = ExtResource( 1 )
-region = Rect2( 32, 800, 32, 32 )
+atlas = ExtResource( 2 )
+region = Rect2( 32, 896, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=3]
 flags = 4
-atlas = ExtResource( 1 )
-region = Rect2( 64, 800, 32, 32 )
+atlas = ExtResource( 2 )
+region = Rect2( 64, 896, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=6]
+[sub_resource type="AtlasTexture" id=7]
 flags = 4
-atlas = ExtResource( 1 )
-region = Rect2( 96, 96, 32, 32 )
+atlas = ExtResource( 2 )
+region = Rect2( 96, 896, 32, 32 )
 
 [sub_resource type="SpriteFrames" id=4]
 animations = [ {
@@ -30,29 +30,34 @@ animations = [ {
 "name": "default",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 6 ), SubResource( 6 ), SubResource( 6 ) ],
-"loop": false,
+"frames": [ SubResource( 7 ), SubResource( 7 ), SubResource( 7 ) ],
+"loop": true,
 "name": "dead",
 "speed": 15.0
 } ]
 
-[sub_resource type="CircleShape2D" id=5]
-radius = 14.5147
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 54.2643, 69.6754 )
 
-[node name="BigEnemy" type="Area2D"]
+[sub_resource type="RectangleShape2D" id=6]
+extents = Vector2( 25.7044, 31.9033 )
+
+[node name="Boss" type="Area2D"]
 light_mask = 2
 scale = Vector2( 5, 5 )
 collision_layer = 2
 collision_mask = 4
-script = ExtResource( 3 )
-point_value = 150.0
+script = ExtResource( 1 )
+point_value = 1000.0
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+scale = Vector2( 4, 4 )
 frames = SubResource( 4 )
+frame = 2
 playing = true
 
 [node name="BoundaryDetection" type="CollisionShape2D" parent="."]
-position = Vector2( -0.682303, 0.628514 )
+position = Vector2( -0.586319, 10.6406 )
 rotation = 1.5708
 shape = SubResource( 5 )
 
@@ -64,9 +69,9 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBoxes/Area2D"]
-position = Vector2( -1.03907, 0.271754 )
+position = Vector2( -1.8876, -5.66794 )
 rotation = 1.5708
-shape = SubResource( 5 )
+shape = SubResource( 6 )
 
 [node name="ProjectileSpawner" type="Node2D" parent="."]
 position = Vector2( -11.8625, 2.05555 )
@@ -83,8 +88,8 @@ wait_time = 0.15
 one_shot = true
 
 [node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
-position = Vector2( -0.832447, 0.475684 )
-scale = Vector2( 1.39244, 1.33298 )
+position = Vector2( 0.864611, 4.71833 )
+scale = Vector2( 6.6816, 5.99989 )
 [connection signal="animation_finished" from="AnimatedSprite" to="." method="_on_AnimatedSprite_animation_finished"]
 [connection signal="area_entered" from="HitBoxes/Area2D" to="." method="_on_Area2D_area_entered"]
 [connection signal="timeout" from="ProjectileSpawner/CooldownTimer" to="." method="_on_CooldownTimer_timeout"]
