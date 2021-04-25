@@ -49,12 +49,10 @@ onready var shield = 100 setget set_shield
 signal shield_changed
 
 onready var powerup = null setget set_powerup
-signal powerup_changed
+#signal powerup_changed
 
 onready var abilities = [] setget set_abilities
-signal abilities_changed 
-
-signal level_complete
+#signal abilities_changed 
 
 onready var position = 0 setget set_position
 
@@ -89,20 +87,21 @@ func set_shield(value):
 
 func set_powerup(value):
 	powerup = value
-	emit_signal("powerup_changed", value)
+#	emit_signal("powerup_changed", value)
 
 func set_abilities(value):
 	abilities = value
-	emit_signal("abilities_changed", value)
+#	emit_signal("abilities_changed", value)
 	
 func set_position(value):
 	position = value
 	
 func died():
-	emit_signal("died")
+	lives -= 1
+	emit_signal("lives_changed", lives)
 	
-func level_complete():
-	emit_signal("level_complete")
+	if lives <= 0:
+		emit_signal("died")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

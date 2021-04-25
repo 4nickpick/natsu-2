@@ -98,6 +98,11 @@ shape = SubResource( 11 )
 
 [node name="HitBoxes" type="Node2D" parent="."]
 
+[node name="KnockbackTween" type="Tween" parent="HitBoxes"]
+playback_process_mode = 0
+playback_speed = 0.5
+playback/speed = 0.5
+
 [node name="Area2D" type="Area2D" parent="HitBoxes"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBoxes/Area2D"]

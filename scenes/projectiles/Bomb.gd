@@ -39,7 +39,7 @@ func _physics_process(delta):
 		position += activeVelocity * speed * delta
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):		
+func _process(_delta):		
 	if speed == max_speed:
 		set_off_explosion()
 	pass

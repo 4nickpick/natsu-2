@@ -22,7 +22,6 @@ var time_now = 0
 # Called when the node enters the scene tree for the first time.
 func _ready():
 				
-		
 	# load level objects from json  
 	var file = File.new()
 	file.open("res://data/level" + str(levelNumber) + ".json", File.READ)
@@ -110,11 +109,11 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since0 the previous frame.
 func _process(delta):		
 	move_along_level_path(delta)
-	process_triggers(delta)
+	process_triggers()
 	
 	# debug
-	time_now = OS.get_unix_time()
-	var time_elapsed = time_now - time_start
+#	time_now = OS.get_unix_time()
+#	var time_elapsed = time_now - time_start
 #	$CanvasLayer.show_message(str(time_elapsed / 60) + "m " + str(time_elapsed % 60) + "s" )
 #	$CanvasLayer/HUD.show_message($Camera2D.position)
 	
@@ -145,9 +144,12 @@ func move_along_level_path(delta):
 	$Camera2D.position += velocity
 	
 	
-func process_triggers(delta):
+func process_triggers():
 	if trigger_keys.size() == 0:
 		return 
+		
+	if PlayerManager.health <= 0:
+		return
 		
 	var next_trigger = trigger_keys[0]
 		
@@ -188,6 +190,6 @@ func spawn_boss_from_instance_header(instance_header):
 	$Camera2D/Enemies/YSort.add_child(enemy)
 	
 func initiate_dialogue_from_header(header):
-	var dialogue = $CanvasLayer.show_message(header.dialogues[0].speech)
+	var _dialogue = $CanvasLayer.show_message(header.dialogues[0].speech)
 	pass
 

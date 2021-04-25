@@ -60,9 +60,10 @@ config/icon="res://icon.png"
 
 [autoload]
 
+Helpers="*res://scripts/Helpers.gd"
 SceneManager="*res://scenes/singletons/SceneManager.tscn"
 PlayerManager="*res://scenes/singletons/PlayerManager.tscn"
-Helpers="*res://scripts/Helpers.gd"
+LevelManager="*res://scenes/singletons/LevelManager.tscn"
 
 [display]
 

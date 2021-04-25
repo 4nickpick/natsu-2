@@ -63,7 +63,8 @@ func bomb():
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize() 
-	PlayerManager.connect("died", self, "set_exit_route")
+	var _error = PlayerManager.connect("lives_changed", self, "set_exit_route")
+	add_to_group("enemies")
 	
 	if path:
 		position = path[0].patrol_point
@@ -176,7 +177,7 @@ func set_exit_route():
 		if leave == 1:
 			# wander about on screen
 			var new_path = []
-			for i in range(3):
+			for _i in range(3):
 				var enemyPathBehavior = EnemyInstancePathBehavior.new()
 				enemyPathBehavior.patrol_point = Vector2((randi() % 1280), (randi() % 600))
 				enemyPathBehavior.speed = randi() % 300				

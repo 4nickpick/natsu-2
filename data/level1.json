@@ -24,7 +24,7 @@
 			{
 				"type": "BigRobot",
 				"enabled": true,
-				"spawn_trigger": {"x": 2, "y": 0},
+				"spawn_trigger": {"x": 7, "y": 0},
 				"group": 4,
 				"end_path_behavior": 2,
 				"path": [
@@ -35,7 +35,7 @@
 			{
 				"type": "Eyeball",
 				"enabled": true,
-				"spawn_trigger": {"x": 1, "y": 0},
+				"spawn_trigger": {"x": 6, "y": 0},
 				"group": 1,
 				"end_path_behavior": 1,
 				"path": [
@@ -47,7 +47,7 @@
 			{
 				"type": "Eyeball",
 				"enabled": true,
-				"spawn_trigger": {"x": 3, "y": 0},
+				"spawn_trigger": {"x": 8, "y": 0},
 				"group": 1,
 				"end_path_behavior": 1,
 				"path": [
@@ -59,7 +59,7 @@
 			{
 				"type": "Eyeball",
 				"enabled": true,
-				"spawn_trigger": {"x": 5, "y": 0},
+				"spawn_trigger": {"x": 10, "y": 0},
 				"group": 1,
 				"end_path_behavior": 1,
 				"path": [
@@ -71,7 +71,7 @@
 			{
 				"type": "Eyeball",
 				"enabled": true,
-				"spawn_trigger": {"x": 2, "y": 0},
+				"spawn_trigger": {"x": 7, "y": 0},
 				"group": 2,
 				"end_path_behavior": 1,
 				"path": [
@@ -83,7 +83,7 @@
 			{
 				"type": "Eyeball",
 				"enabled": true,
-				"spawn_trigger": {"x": 4, "y": 0},
+				"spawn_trigger": {"x": 9, "y": 0},
 				"group": 2,
 				"end_path_behavior": 1,
 				"path": [
@@ -95,7 +95,7 @@
 			{
 				"type": "Eyeball",
 				"enabled": true,
-				"spawn_trigger": {"x": 6, "y": 0},
+				"spawn_trigger": {"x": 11, "y": 0},
 				"group": 2,
 				"end_path_behavior": 1,
 				"path": [
@@ -107,7 +107,7 @@
 			{
 				"type": "Eyeball",
 				"enabled": true,
-				"spawn_trigger": {"x": 0, "y": 0},
+				"spawn_trigger": {"x": 15, "y": 0},
 				"group": 3,
 				"end_path_behavior": 3,
 				"path": [

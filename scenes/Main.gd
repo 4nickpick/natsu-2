@@ -17,8 +17,7 @@ func _ready():
 
 
 func _on_StartButton_pressed():
-	SceneManager.goto_scene("res://scenes/levels/Level1.tscn")
-
+	LevelManager.load_level(1)
 
 func _on_SettingsButton_pressed():
 #	SceneManager.goto_scene("res://scenes/Settings.tscn")

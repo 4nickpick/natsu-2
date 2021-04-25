@@ -15,9 +15,9 @@ func start():
 	$TweenRise.start()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+#func _process(delta):
+#	pass
 
 
-func _on_TweenRise_tween_completed(object, key):
+func _on_TweenRise_tween_completed(_object, _key):
 	queue_free()

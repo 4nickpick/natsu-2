@@ -37,9 +37,10 @@ __meta__ = {
 motion_mirroring = Vector2( 2480, 1200 )
 
 [node name="BackgroundColor" type="ColorRect" parent="ParallaxBackground/ParallaxLayer2"]
-margin_top = -2.20274
-margin_right = 4096.0
-margin_bottom = 1200.18
+margin_left = -1.33496
+margin_top = -0.867901
+margin_right = 4094.67
+margin_bottom = 1201.51
 color = Color( 0.235294, 0.631373, 0.784314, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -79,7 +80,7 @@ smoothing_enabled = true
 collision_layer = 16
 
 [node name="Left" type="CollisionShape2D" parent="Camera2D/Boundaries"]
-position = Vector2( 10, 400 )
+position = Vector2( 9, 400 )
 shape = SubResource( 2 )
 
 [node name="Right" type="CollisionShape2D" parent="Camera2D/Boundaries"]
@@ -87,7 +88,7 @@ position = Vector2( 1911.35, 408.16 )
 shape = SubResource( 3 )
 
 [node name="Bottom" type="CollisionShape2D" parent="Camera2D/Boundaries"]
-position = Vector2( 979.729, 801.568 )
+position = Vector2( 969.718, 801.568 )
 shape = SubResource( 4 )
 
 [node name="Bottom2" type="CollisionShape2D" parent="Camera2D/Boundaries"]

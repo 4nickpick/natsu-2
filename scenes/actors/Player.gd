@@ -34,9 +34,7 @@ var bullets = []
 
 # abilities
 onready var abilities = [
-	PlayerManager.Abilities.SHIELD,
-	PlayerManager.Abilities.CHARGE_SHOT,
-	PlayerManager.Abilities.HEAT_SEEKING
+	PlayerManager.Abilities.SHIELD
 ] setget set_abilities
 
 onready var powerup = null setget set_powerup
@@ -130,7 +128,13 @@ func construct_current_bullet():
 	currentBullet.activeVelocity = Vector2(1, 0)
 	owner.add_child(currentBullet)		
 	
+	if abilities.find(PlayerManager.Abilities.CHARGE_SHOT) < 0:
+		shoot()
+	
 func update_current_bullet():
+	if currentBullet == null:
+		return
+		
 	if powerup == PlayerManager.PowerUps.HYPER:
 		return
 		
@@ -141,9 +145,9 @@ func update_current_bullet():
 		if charge > 0:
 			chargeMultiplier = (charge / 100.0) + 1 
 			currentBullet.scale = Vector2(chargeMultiplier, chargeMultiplier) 
-			
-		if not currentBullet.active or currentBullet.is_missile: 
-			currentBullet.global_position = $ProjectileSpawner.global_position
+		
+	if not currentBullet.active: 
+		currentBullet.global_position = $ProjectileSpawner.global_position
 	
 	
 func shoot():
@@ -237,6 +241,9 @@ func adjust_shield_charge(delta):
 		
 		
 func build_charge(delta):
+	if abilities.find(PlayerManager.Abilities.CHARGE_SHOT) < 0:
+		return 
+		
 	if powerup == PlayerManager.PowerUps.BOMB or powerup == PlayerManager.PowerUps.HYPER:
 		return
 	
@@ -288,8 +295,8 @@ func _process(delta):
 	if abilities.find(PlayerManager.Abilities.SHIELD) > -1:
 		adjust_shield_charge(delta)
 	
-func _physics_process(delta):
-	var collision = move_and_slide(velocity)			
+func _physics_process(_delta):
+	var _collision = move_and_slide(velocity)			
 	PlayerManager.position = position
 	update_current_bullet()
 		
@@ -390,6 +397,7 @@ func set_lives(value):
 	
 func kill():
 		PlayerManager.died()
+		emit_signal("died")
 		destroy()
 	
 	
@@ -421,15 +429,18 @@ func _on_Area2D_area_entered(area):
 			$PowerupTimer.start()
 			emit_signal("powerup_changed")
 			area.destroy()
+			
 	elif area.is_in_group("enemies"):
 		if area.health > 0:
 			take_damage(1)
-			area.kill()		
+			var newPosition = position + (position - area.position).normalized() * 100  
+			$HitBoxes/KnockbackTween.interpolate_property(self, "position", null, newPosition, .01, Tween.TRANS_LINEAR, Tween.EASE_OUT)	
+			$HitBoxes/KnockbackTween.start()
 		
 
 func _on_ActiveHitBox_area_entered(area):
+	# destroy blocked projectiles
 	if area.is_in_group("enemy_projectiles"):
-		self.score += area.point_value / 2
 		area.destroy()
 	pass # Replace with function baody.
 
@@ -442,6 +453,10 @@ func _on_PerfectHitBox_area_entered(area):
 		area.reflect("player")
 		
 		self.shield -= 40
+		
+		# apply score bonus for deflecting projectiles
+		self.score += area.point_value / 2
+		
 		emit_signal("shield_changed")
 		
 
