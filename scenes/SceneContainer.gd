@@ -29,6 +29,7 @@ func level_loading_started(value):
 	$Backdrop/Tween.start()
 	$Loading/DelayInTimer.start()
 	$Loading/CenterContainer/VBoxContainer/LevelLabel.text = "Level " + str(value) + ": Sunlight Zone "
+	$Loading/CenterContainer/VBoxContainer/ProgressBar.value = .01
 	
 	var animations = loading_animated_sprite.frames.get_animation_names()
 	var animation_id = randi() % animations.size()
@@ -36,10 +37,10 @@ func level_loading_started(value):
 	loading_animated_sprite.play(animation_name)
 	
 func level_loaded():
+	get_tree().paused = false
 	$Backdrop/Tween.interpolate_property($Backdrop, "color", Color(0, 0, 0, 1), Color(0, 0, 0, 0), $Loading/DelayOutTimer.wait_time, Tween.TRANS_LINEAR, Tween.EASE_IN)
 	$Backdrop/Tween.start()
 	$Loading/DelayOutTimer.start()
-	get_tree().paused = false
 	$Loading/SpriteContainer.hide()
 	$Loading/CenterContainer.hide()
 	pass

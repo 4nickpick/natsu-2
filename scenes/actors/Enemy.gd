@@ -6,11 +6,15 @@ export (float) var point_value = 100
 export (float) var projectile_speed = 1000
 export (float) var firing_rate = .1
 export var firing_angle = 0
+export var firing_spray = 1
+export var body_rotating = false
+export var body_rotating_speed: float = .5
 export (int) var group = null
 var velocity = Vector2(0, 0) #Vector2(-1, 0) 
 
 export (PoolVector2Array) var path
-export (NodePath) var powerup 
+export (NodePath) var powerup
+
 var patrol_index = 0
 var patrol_iterator = 1 # direction to iterate over patrol_points
 
@@ -20,6 +24,12 @@ enum PatrolType {
 	PATROL_BACK = 3
 }
 var end_path_behavior: int = 1
+
+# enemy stunned
+export var stunnable: bool = true
+var stunned: bool = false
+export var freezable: bool = true
+var frozen: bool = false
 
 # burst 
 onready var cooldownTimer = $ProjectileSpawner/CooldownTimer
@@ -39,11 +49,21 @@ func shoot():
 	if PlayerManager.health <= 0:
 		return
 		
+	_create_bullet(0)
+	
+	if firing_spray > 1:
+		firing_angle = 360 / firing_spray
+		for i in range(firing_spray):
+			if i == 0:
+				continue
+			_create_bullet(i * firing_angle)
+		
+func _create_bullet(rotation_offset):
 	var b = Echo.instance()
 	b.set_origin("enemies")
 	get_parent().add_child(b)
 	b.global_position = $ProjectileSpawner.global_position
-	b.activeVelocity = Vector2(-1, 0).rotated(rotation)
+	b.activeVelocity = Vector2(-1, 0).rotated(rotation + deg2rad(rotation_offset))
 	b.speed = projectile_speed
 	b.active = true
 	
@@ -81,12 +101,29 @@ func _ready():
 	velocity = velocity.normalized()
 	pass # Replace with function body.
 	
-func _process(_delta):
+func _process(delta):
+	var rotation_val = 0
+	if body_rotating:
+		rotation_val = rotation + (body_rotating_speed * delta)
+	elif $BurstCooldownTimer.is_stopped():
+		if str(firing_angle) == "player":
+			rotation_val = (position - PlayerManager.position).angle()
+		else:
+			rotation_val = deg2rad(firing_angle)
+			
+	rotation = rotation_val			
+#			PlayerManager.emit_signal("rotation_changed", str(rad2deg(rotation_val)) + "H: " + str($AnimatedSprite.flip_h) + "V: " + str($AnimatedSprite.flip_v) )
+
+	$AnimatedSprite.flip_v = Helpers.is_between_inclusive(rotation_degrees, -180, -91) or \
+		Helpers.is_between_inclusive(rotation_degrees, 91, 180)
 	pass
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
+	if stunned:
+		return
+			
 	if !path:
 		position += (velocity * speed * delta)
 		
@@ -128,38 +165,36 @@ func _physics_process(delta):
 		
 		velocity = (target - position).normalized() * tempSpeed * delta
 		position += velocity
-		
-		if $BurstCooldownTimer.is_stopped():
-			var rotation_val = 0
-			if str(firing_angle) == "player":
-				rotation_val = (position - PlayerManager.position).angle()
-			else:
-				rotation_val = deg2rad(firing_angle)		
-				
-			rotation = rotation_val			
-#			PlayerManager.emit_signal("rotation_changed", str(rad2deg(rotation_val)) + "H: " + str($AnimatedSprite.flip_h) + "V: " + str($AnimatedSprite.flip_v) )
-
-		$AnimatedSprite.flip_v = Helpers.is_between_inclusive(rotation_degrees, -180, -91) or \
-			Helpers.is_between_inclusive(rotation_degrees, 91, 180)
 
 func destroy():
 	queue_free()
 	
 func take_damage(damage):
 	health -= damage
-	self.modulate = Color.red
+	
 	if health <= 0:
 		PlayerManager.add_score(point_value)
 		kill()
 	
+	if stunnable: 
+		set_stunned()	
+	
 	return true
+	
+func set_stunned():
+	stunned = true
+	pass
 	
 func kill():
 	set_collision_layer_bit(1, false)
 	path = null
 	health = 0
 	velocity = Vector2.ZERO
-	$HitBoxes/Area2D/CollisionShape2D.set_deferred("disabled", true)
+	
+	var hitboxes = $HitBoxes.get_children()
+	for hitbox in hitboxes:
+		hitbox.get_node("CollisionShape2D").set_deferred("disabled", true)
+		
 	$AnimatedSprite.modulate = Color(127, 0, 0, 127)
 	$AnimatedSprite.play("dead")	
 	
@@ -225,6 +260,16 @@ func _on_Area2D_area_entered(area):
 	if area.is_in_group("player_projectiles"):
 		if take_damage(area.damage):
 			area.destroy()		
+			
+func _on_Body_area_entered(area):
+	if area.is_in_group("player_projectiles"):
+		area.destroy()	#body is invincible
+
 		
 func _on_HitCooldownTimer_timeout():
 	pass # Replace with function body.
+
+
+func _on_StunnedTimer_timeout():
+	stunned = false
+

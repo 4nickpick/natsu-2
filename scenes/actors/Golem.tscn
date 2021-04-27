@@ -1,0 +1,258 @@
+[gd_scene load_steps=18 format=2]
+
+[ext_resource path="res://assets/art/enemies/4nickpick/golem.png" type="Texture" id=1]
+[ext_resource path="res://scenes/actors/Enemy.gd" type="Script" id=3]
+
+[sub_resource type="AtlasTexture" id=1]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 500, 0, 500, 500 )
+
+[sub_resource type="AtlasTexture" id=2]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 1000, 0, 500, 500 )
+
+[sub_resource type="AtlasTexture" id=3]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 1500, 0, 500, 500 )
+
+[sub_resource type="AtlasTexture" id=4]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 0, 500, 500, 500 )
+
+[sub_resource type="AtlasTexture" id=5]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 500, 500, 500, 500 )
+
+[sub_resource type="AtlasTexture" id=9]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 0, 0, 500, 500 )
+
+[sub_resource type="AtlasTexture" id=8]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 1000, 0, 500, 500 )
+
+[sub_resource type="AtlasTexture" id=11]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 0, 1000, 500, 500 )
+
+[sub_resource type="AtlasTexture" id=10]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 1000, 500, 500, 500 )
+
+[sub_resource type="AtlasTexture" id=12]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 500, 1000, 500, 500 )
+
+[sub_resource type="AtlasTexture" id=13]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 1500, 500, 500, 500 )
+
+[sub_resource type="SpriteFrames" id=6]
+animations = [ {
+"frames": [ SubResource( 1 ), SubResource( 1 ), SubResource( 1 ), SubResource( 1 ), SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ) ],
+"loop": true,
+"name": "default",
+"speed": 6.0
+}, {
+"frames": [ SubResource( 9 ) ],
+"loop": true,
+"name": "back",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 8 ), SubResource( 8 ), SubResource( 8 ) ],
+"loop": true,
+"name": "dead",
+"speed": 6.0
+}, {
+"frames": [ SubResource( 11 ) ],
+"loop": true,
+"name": "cap3",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 10 ) ],
+"loop": true,
+"name": "cap1",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 12 ) ],
+"loop": true,
+"name": "cap4",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 13 ) ],
+"loop": true,
+"name": "cap2",
+"speed": 5.0
+} ]
+
+[sub_resource type="CircleShape2D" id=7]
+radius = 255.762
+
+[sub_resource type="CapsuleShape2D" id=14]
+radius = 16.0809
+height = 99.8898
+
+[sub_resource type="CapsuleShape2D" id=15]
+radius = 16.2733
+height = 94.1168
+
+[node name="Golem" type="Area2D"]
+light_mask = 2
+collision_layer = 2
+collision_mask = 4
+script = ExtResource( 3 )
+point_value = 150.0
+firing_spray = 4
+body_rotating = true
+body_rotating_speed = 0.5
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+scale = Vector2( 1, 1 )
+z_index = -10
+frames = SubResource( 6 )
+animation = "back"
+playing = true
+
+[node name="FacialExpression" type="AnimatedSprite" parent="AnimatedSprite"]
+z_index = 10
+frames = SubResource( 6 )
+playing = true
+
+[node name="Cap1" type="AnimatedSprite" parent="AnimatedSprite"]
+scale = Vector2( 1, 1 )
+z_index = 20
+frames = SubResource( 6 )
+animation = "cap1"
+playing = true
+
+[node name="Cap2" type="AnimatedSprite" parent="AnimatedSprite"]
+scale = Vector2( 1, 1 )
+z_index = 20
+frames = SubResource( 6 )
+animation = "cap2"
+playing = true
+
+[node name="Cap3" type="AnimatedSprite" parent="AnimatedSprite"]
+scale = Vector2( 1, 1 )
+z_index = 20
+frames = SubResource( 6 )
+animation = "cap3"
+playing = true
+
+[node name="Cap4" type="AnimatedSprite" parent="AnimatedSprite"]
+scale = Vector2( 1, 1 )
+z_index = 20
+frames = SubResource( 6 )
+animation = "cap4"
+playing = true
+
+[node name="BoundaryDetection" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2( -0.682303, 0.628514 )
+rotation = 1.5708
+shape = SubResource( 7 )
+
+[node name="HitBoxes" type="Node2D" parent="."]
+
+[node name="Cap1" type="Area2D" parent="HitBoxes"]
+position = Vector2( 0.317481, 0.317481 )
+scale = Vector2( 1, 1 )
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBoxes/Cap1"]
+position = Vector2( -172.424, 134.686 )
+rotation = -3.85369
+z_index = 100
+shape = SubResource( 14 )
+
+[node name="Cap2" type="Area2D" parent="HitBoxes"]
+position = Vector2( 0.317481, 0.317481 )
+scale = Vector2( 1, 1 )
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBoxes/Cap2"]
+position = Vector2( -166.741, -148.306 )
+rotation = 0.785398
+scale = Vector2( 1, 1 )
+z_index = 100
+shape = SubResource( 15 )
+
+[node name="Cap3" type="Area2D" parent="HitBoxes"]
+position = Vector2( 349.512, -275.193 )
+scale = Vector2( 1, 1 )
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBoxes/Cap3"]
+position = Vector2( -172.424, 134.686 )
+rotation = -3.85369
+z_index = 100
+shape = SubResource( 14 )
+
+[node name="Cap4" type="Area2D" parent="HitBoxes"]
+position = Vector2( 0.31748, 0.317456 )
+scale = Vector2( 1, 1 )
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBoxes/Cap4"]
+position = Vector2( 181.385, 128.272 )
+rotation = 0.685914
+z_index = 100
+shape = SubResource( 15 )
+
+[node name="Body" type="Area2D" parent="HitBoxes"]
+position = Vector2( 0.317481, 0.317481 )
+scale = Vector2( 1, 1 )
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="HitBoxes/Body"]
+position = Vector2( -74.0395, 25.3699 )
+rotation = -3.85369
+z_index = 100
+polygon = PoolVector2Array( 144.614, 52.1514, 116.049, 109.696, 59.3074, 165.137, 21.5624, 186.987, 17.5958, 173.566, 6.22491, 164.861, -18.4803, 161.31, -62.6241, 160.974, -108.932, 179.876, -120.123, 197.988, -114.394, 202.933, -141.732, 195.998, -184.723, 178.884, -229.858, 148.811, -266.464, 104.995, -291.818, 52.006, -299.142, 33.4652, -282.973, 26.3158, -272.393, -0.0979958, -271.829, -57.375, -279.822, -93.1565, -292.265, -108.34, -286.369, -125.467, -254.272, -175.52, -231.57, -199.247, -207.334, -218.317, -196.344, -231.048, -176.236, -217.023, -150.459, -206.992, -118.061, -212.352, -83.7269, -223.817, -56.569, -243.697, -53.3325, -256.455, -29.5251, -257.011, 10.7456, -244.467, 62.2732, -216.652, 94.1009, -189.179, 120.695, -151.783, 144.368, -113.575, 151.203, -85.4595, 128.755, -82.6187, 122.021, -60.6608, 112.807, -7.51811, 119.353, 24.7924 )
+
+[node name="ProjectileSpawner" type="Node2D" parent="."]
+position = Vector2( 0.952001, -1.14806 )
+
+[node name="CooldownTimer" type="Timer" parent="ProjectileSpawner"]
+autostart = true
+
+[node name="HitCooldownTimer" type="Timer" parent="."]
+
+[node name="BurstCooldownTimer" type="Timer" parent="."]
+process_mode = 0
+wait_time = 0.15
+one_shot = true
+
+[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+position = Vector2( -0.298515, -2.72795 )
+scale = Vector2( 24.5119, 24.6126 )
+[connection signal="animation_finished" from="AnimatedSprite" to="." method="_on_AnimatedSprite_animation_finished"]
+[connection signal="animation_finished" from="AnimatedSprite/FacialExpression" to="." method="_on_AnimatedSprite_animation_finished"]
+[connection signal="animation_finished" from="AnimatedSprite/Cap1" to="." method="_on_AnimatedSprite_animation_finished"]
+[connection signal="animation_finished" from="AnimatedSprite/Cap2" to="." method="_on_AnimatedSprite_animation_finished"]
+[connection signal="animation_finished" from="AnimatedSprite/Cap3" to="." method="_on_AnimatedSprite_animation_finished"]
+[connection signal="animation_finished" from="AnimatedSprite/Cap4" to="." method="_on_AnimatedSprite_animation_finished"]
+[connection signal="area_entered" from="HitBoxes/Cap1" to="." method="_on_Area2D_area_entered"]
+[connection signal="area_entered" from="HitBoxes/Cap2" to="." method="_on_Area2D_area_entered"]
+[connection signal="area_entered" from="HitBoxes/Cap3" to="." method="_on_Area2D_area_entered"]
+[connection signal="area_entered" from="HitBoxes/Cap4" to="." method="_on_Area2D_area_entered"]
+[connection signal="area_entered" from="HitBoxes/Body" to="." method="_on_Body_area_entered"]
+[connection signal="timeout" from="ProjectileSpawner/CooldownTimer" to="." method="_on_CooldownTimer_timeout"]
+[connection signal="timeout" from="HitCooldownTimer" to="." method="_on_HitCooldownTimer_timeout"]
+[connection signal="timeout" from="BurstCooldownTimer" to="." method="_on_BurstCooldownTimer_timeout"]

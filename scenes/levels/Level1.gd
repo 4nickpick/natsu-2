@@ -3,6 +3,7 @@ extends Node2D
 export (int) var levelNumber = 1
 const Enemy = preload("res://scenes/actors/Enemy.tscn")
 const BigEnemy = preload("res://scenes/actors/BigEnemy.tscn")
+const Golem = preload("res://scenes/actors/Golem.tscn")
 const Boss = preload("res://scenes/actors/Boss.tscn")
 
 # camera management
@@ -175,6 +176,8 @@ func spawn_enemy_from_instance_header(instance_header):
 			enemy = Enemy.instance()
 		"BigRobot":
 			enemy = BigEnemy.instance()
+		"Golem":
+			enemy = Golem.instance()
 	
 	enemy.path = instance_header.path
 	enemy.group = instance_header.group

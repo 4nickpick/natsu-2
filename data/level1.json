@@ -1,7 +1,7 @@
 {
 	"level": {
 		"name": "One",
-		"path": [{"x": 0, "y": 0}, {"x": 20, "y": 0}],
+		"path": [{"x": 0, "y": 0}, {"x": 30, "y": 0}],
 		"speed": 80,
 		"boss": { 
 			"type": "KingCrab",
@@ -23,7 +23,7 @@
 		"enemies": [ 
 			{
 				"type": "BigRobot",
-				"enabled": true,
+				"enabled": false,
 				"spawn_trigger": {"x": 7, "y": 0},
 				"group": 4,
 				"end_path_behavior": 2,
@@ -34,7 +34,7 @@
 			},
 			{
 				"type": "Eyeball",
-				"enabled": true,
+				"enabled": false,
 				"spawn_trigger": {"x": 6, "y": 0},
 				"group": 1,
 				"end_path_behavior": 1,
@@ -46,7 +46,7 @@
 			},
 			{
 				"type": "Eyeball",
-				"enabled": true,
+				"enabled": false,
 				"spawn_trigger": {"x": 8, "y": 0},
 				"group": 1,
 				"end_path_behavior": 1,
@@ -58,7 +58,7 @@
 			},
 			{
 				"type": "Eyeball",
-				"enabled": true,
+				"enabled": false,
 				"spawn_trigger": {"x": 10, "y": 0},
 				"group": 1,
 				"end_path_behavior": 1,
@@ -70,7 +70,7 @@
 			},
 			{
 				"type": "Eyeball",
-				"enabled": true,
+				"enabled": false,
 				"spawn_trigger": {"x": 7, "y": 0},
 				"group": 2,
 				"end_path_behavior": 1,
@@ -82,7 +82,7 @@
 			},
 			{
 				"type": "Eyeball",
-				"enabled": true,
+				"enabled": false,
 				"spawn_trigger": {"x": 9, "y": 0},
 				"group": 2,
 				"end_path_behavior": 1,
@@ -94,7 +94,7 @@
 			},
 			{
 				"type": "Eyeball",
-				"enabled": true,
+				"enabled": false,
 				"spawn_trigger": {"x": 11, "y": 0},
 				"group": 2,
 				"end_path_behavior": 1,
@@ -106,13 +106,24 @@
 			},
 			{
 				"type": "Eyeball",
-				"enabled": true,
+				"enabled": false,
 				"spawn_trigger": {"x": 15, "y": 0},
 				"group": 3,
 				"end_path_behavior": 3,
 				"path": [
 					{"x": 8, "y": 5, "speed": 300, "projectile_speed": 1000, "firing_rate": 1.5, "firing_angle": "player", "firing_type": "burst"},
 					{"x": 9, "y": 5, "speed": 300, "projectile_speed": 1000, "firing_rate": 1.5, "firing_angle": "player", "firing_type": "burst"}
+				]
+			},
+			{
+				"type": "Golem",
+				"enabled": true,
+				"spawn_trigger": {"x": 7, "y": 0},
+				"group": 7,
+				"end_path_behavior": 3,
+				"path": [
+					{"x": 12, "y": 2, "speed": 300, "projectile_speed": 1000, "firing_rate": 1.5, "firing_angle": "player", "firing_type": "burst"},
+					{"x": 12, "y": 10, "speed": 300, "projectile_speed": 1000, "firing_rate": 1.5, "firing_angle": "player", "firing_type": "burst"}
 				]
 			}
 		],

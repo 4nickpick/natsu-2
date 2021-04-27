@@ -140,6 +140,7 @@ __meta__ = {
 [node name="Tween" type="Tween" parent="Backdrop"]
 
 [node name="Loading" type="Popup" parent="."]
+pause_mode = 2
 anchor_right = 1.0
 anchor_bottom = 1.0
 __meta__ = {

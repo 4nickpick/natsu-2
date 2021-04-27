@@ -139,15 +139,15 @@ func _on_RestartLevelButton_pressed():
 	pause_menu_hide()
 	game_over_menu_hide()
 	level_complete_menu_hide()
-	get_tree().paused = false
 	LevelManager.load_level(LevelManager.current_level)
+	#unpause level later to avoid enemies from moving while new level loads
 
 func _on_QuitButton_pressed():
 	pause_menu_hide()
 	game_over_menu_hide()
 	level_complete_menu_hide()
-	get_tree().paused = false
 	SceneManager.goto_scene("res://scenes/Main.tscn") 
+	get_tree().paused = false
 
 func _on_GameOverMenu_DelayTimer_timeout():
 	$GameOverMenu.show()
