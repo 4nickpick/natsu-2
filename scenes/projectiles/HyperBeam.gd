@@ -2,7 +2,7 @@ extends Area2D
 
 var numBeams = 1
 var damage = 100
-var targetNumBeams = 25
+var targetNumBeams = 35
 
 
 # Declare member variables here. Examples:

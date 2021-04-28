@@ -37,7 +37,7 @@ onready var abilities = [
 	PlayerManager.Abilities.SHIELD
 ] setget set_abilities
 
-onready var powerup = null setget set_powerup
+onready var powerup = PlayerManager.PowerUps.NONE setget set_powerup
 
 enum CollisionMaskLayers {
 	PLAYER = 0,
@@ -88,6 +88,21 @@ func get_input(delta):
 		if Input.is_action_just_released("player_action2"):
 			$AnimatedSprite.animation = "default"
 			
+	if Input.is_action_just_pressed("player_action3"):
+		if $PowerupTimer.is_stopped():
+			match self.powerup:
+				PlayerManager.PowerUps.NONE:
+					self.powerup = PlayerManager.PowerUps.HYPER
+				PlayerManager.PowerUps.HYPER:
+					self.powerup = PlayerManager.PowerUps.BOMB
+				PlayerManager.PowerUps.BOMB:
+					self.powerup = PlayerManager.PowerUps.BURST
+				PlayerManager.PowerUps.BURST:
+					self.powerup = PlayerManager.PowerUps.BURST_ANGLED
+				PlayerManager.PowerUps.BURST_ANGLED:
+					self.powerup = PlayerManager.PowerUps.NONE			
+				_:
+					self.powerup = PlayerManager.PowerUps.NONE			
 	
 	if abilities.find(PlayerManager.Abilities.HEAT_SEEKING) > -1 and currentBullet:
 		var startingHeatSeekingIndex = heatSeekingIndex
@@ -116,6 +131,7 @@ func get_input(delta):
 	
 func construct_current_bullet():
 	if powerup == PlayerManager.PowerUps.HYPER: # there's no point in shooting at this point
+		construct_hyper_beam()
 		return
 		
 	if powerup == PlayerManager.PowerUps.BOMB: 
@@ -185,17 +201,17 @@ func shoot():
 		if !currentBullet.heat_seeking:
 			if powerup == PlayerManager.PowerUps.BURST or powerup == PlayerManager.PowerUps.BURST_ANGLED:
 				var currentBulletUp = currentBullet.copy()
+				owner.add_child(currentBulletUp)
 				currentBulletUp.global_position.y = currentBullet.global_position.y - 30
 				if powerup == PlayerManager.PowerUps.BURST_ANGLED:
 					currentBulletUp.activeVelocity = currentBulletUp.activeVelocity.rotated(-.25)
-				owner.add_child(currentBulletUp)
 				bullets.push_back(currentBulletUp)
 				
 				var currentBulletDown = currentBullet.copy()
+				owner.add_child(currentBulletDown)
 				currentBulletDown.global_position.y = currentBullet.global_position.y + 30
 				if powerup == PlayerManager.PowerUps.BURST_ANGLED:
 					currentBulletDown.activeVelocity = currentBulletDown.activeVelocity.rotated(.25)
-				owner.add_child(currentBulletDown)
 				bullets.push_back(currentBulletDown)
 			
 		bullets.push_back(currentBullet) 
@@ -268,6 +284,7 @@ func construct_hyper_beam():
 		var h = Hyper.instance()
 		h.position = $ProjectileSpawner.position
 		add_child(h)
+		$PowerupTimer.start()
 		
 func deconstruct_hyper_beam():
 	var h = get_node_or_null("HyperBeam")
@@ -285,8 +302,6 @@ func _ready():
 	
 	setShieldState(PlayerManager.ShieldState.INACTIVE)
 	add_to_group("player")
-	
-	construct_hyper_beam()
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):	
@@ -476,6 +491,5 @@ func _on_PerfectCooldownTimer_timeout():
 		
 
 func _on_PowerupTimer_timeout():
-	powerup = null
 	deconstruct_hyper_beam()
-	emit_signal("powerup_changed")
+	self.powerup = PlayerManager.PowerUps.NONE

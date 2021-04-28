@@ -49,6 +49,7 @@ point_value = 150.0
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 10 )
+frame = 2
 playing = true
 
 [node name="BoundaryDetection" type="CollisionShape2D" parent="."]

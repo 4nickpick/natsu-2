@@ -1,5 +1,11 @@
 extends Area2D
 
+const Echo = preload("res://scenes/projectiles/Echo.tscn")
+const Bomb = preload("res://scenes/projectiles/Bomb.tscn")
+const Powerup = preload("res://scenes/powerups/Powerup.tscn")
+const ScoreLabel = preload("res://scenes/HUD/ScoreLabel.tscn")
+const EnemyBody = preload("res://scenes/actors/EnemyBody.gd")
+
 export (int) var health = 2
 export (float) var speed = 150
 export (float) var point_value = 100
@@ -36,11 +42,6 @@ onready var cooldownTimer = $ProjectileSpawner/CooldownTimer
 var firing_type = null
 var maxBurst: int = 3
 var burstRemaining: int = 0
-
-const Echo = preload("res://scenes/projectiles/Echo.tscn")
-const Bomb = preload("res://scenes/projectiles/Bomb.tscn")
-const Powerup = preload("res://scenes/powerups/Powerup.tscn")
-const ScoreLabel = preload("res://scenes/HUD/ScoreLabel.tscn")
 	
 func shoot():
 	if health <= 0:
@@ -173,8 +174,27 @@ func take_damage(damage):
 	health -= damage
 	
 	if health <= 0:
-		PlayerManager.add_score(point_value)
 		kill()
+	
+	if stunnable: 
+		set_stunned()	
+	
+	return true
+	
+func body_take_damage(body, damage):
+	body.health -= damage
+	
+	if body.health <= 0:
+		PlayerManager.add_score(body.point_value)
+		body.kill()
+		
+		var bodies = $HitBoxes.get_children()
+		var totalHealthRemaining = 0
+		for body in bodies:
+			totalHealthRemaining += clamp(body.health, 0, 9999)
+			
+		if totalHealthRemaining <= 0:
+			kill()			
 	
 	if stunnable: 
 		set_stunned()	
@@ -198,6 +218,7 @@ func kill():
 	$AnimatedSprite.modulate = Color(127, 0, 0, 127)
 	$AnimatedSprite.play("dead")	
 	
+	PlayerManager.score += point_value
 	var scoreLabel = ScoreLabel.instance()
 	get_tree().get_root().add_child(scoreLabel)
 	scoreLabel.position = position	
@@ -261,15 +282,19 @@ func _on_Area2D_area_entered(area):
 		if take_damage(area.damage):
 			area.destroy()		
 			
-func _on_Body_area_entered(area):
+			
+func _on_Body_area_entered(area, body_name):
 	if area.is_in_group("player_projectiles"):
-		area.destroy()	#body is invincible
+		var targetBody = $HitBoxes.get_node_or_null(body_name)
+		if !targetBody:
+			return
+			
+		body_take_damage(targetBody, area.damage)
 
 		
 func _on_HitCooldownTimer_timeout():
 	pass # Replace with function body.
 
-
-func _on_StunnedTimer_timeout():
-	stunned = false
-
+func _on_Core_area_entered(area):
+	if area.is_in_group("player_projectiles"):
+		area.destroy()	#core is invincible

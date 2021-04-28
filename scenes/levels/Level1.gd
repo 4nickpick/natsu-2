@@ -107,7 +107,7 @@ func _ready():
 	
 	return
 
-# Called every frame. 'delta' is the elapsed time since0 the previous frame.
+# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):		
 	move_along_level_path(delta)
 	process_triggers()
@@ -117,7 +117,7 @@ func _process(delta):
 #	var time_elapsed = time_now - time_start
 #	$CanvasLayer.show_message(str(time_elapsed / 60) + "m " + str(time_elapsed % 60) + "s" )
 #	$CanvasLayer/HUD.show_message($Camera2D.position)
-	
+
 	
 func move_along_level_path(delta):
 	if not path:

@@ -95,7 +95,7 @@ func reflect(origin):
 	
 	
 func copy():
-	var copied = duplicate(8)
+	var copied = duplicate()
 	copied.active = true
 	return copied
 	

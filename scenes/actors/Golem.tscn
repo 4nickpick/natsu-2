@@ -1,6 +1,7 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://assets/art/enemies/4nickpick/golem.png" type="Texture" id=1]
+[ext_resource path="res://scenes/actors/EnemyBody.gd" type="Script" id=2]
 [ext_resource path="res://scenes/actors/Enemy.gd" type="Script" id=3]
 
 [sub_resource type="AtlasTexture" id=1]
@@ -76,22 +77,22 @@ animations = [ {
 "speed": 6.0
 }, {
 "frames": [ SubResource( 11 ) ],
-"loop": true,
+"loop": false,
 "name": "cap3",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 10 ) ],
-"loop": true,
+"loop": false,
 "name": "cap1",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 12 ) ],
-"loop": true,
+"loop": false,
 "name": "cap4",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 13 ) ],
-"loop": true,
+"loop": false,
 "name": "cap2",
 "speed": 5.0
 } ]
@@ -112,10 +113,12 @@ light_mask = 2
 collision_layer = 2
 collision_mask = 4
 script = ExtResource( 3 )
-point_value = 150.0
+point_value = 250.0
 firing_spray = 4
 body_rotating = true
 body_rotating_speed = 0.5
+stunnable = false
+freezable = false
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 1, 1 )
@@ -127,38 +130,10 @@ playing = true
 [node name="FacialExpression" type="AnimatedSprite" parent="AnimatedSprite"]
 z_index = 10
 frames = SubResource( 6 )
-playing = true
-
-[node name="Cap1" type="AnimatedSprite" parent="AnimatedSprite"]
-scale = Vector2( 1, 1 )
-z_index = 20
-frames = SubResource( 6 )
-animation = "cap1"
-playing = true
-
-[node name="Cap2" type="AnimatedSprite" parent="AnimatedSprite"]
-scale = Vector2( 1, 1 )
-z_index = 20
-frames = SubResource( 6 )
-animation = "cap2"
-playing = true
-
-[node name="Cap3" type="AnimatedSprite" parent="AnimatedSprite"]
-scale = Vector2( 1, 1 )
-z_index = 20
-frames = SubResource( 6 )
-animation = "cap3"
-playing = true
-
-[node name="Cap4" type="AnimatedSprite" parent="AnimatedSprite"]
-scale = Vector2( 1, 1 )
-z_index = 20
-frames = SubResource( 6 )
-animation = "cap4"
+frame = 3
 playing = true
 
 [node name="BoundaryDetection" type="CollisionShape2D" parent="."]
-visible = false
 position = Vector2( -0.682303, 0.628514 )
 rotation = 1.5708
 shape = SubResource( 7 )
@@ -166,10 +141,17 @@ shape = SubResource( 7 )
 [node name="HitBoxes" type="Node2D" parent="."]
 
 [node name="Cap1" type="Area2D" parent="HitBoxes"]
-position = Vector2( 0.317481, 0.317481 )
 scale = Vector2( 1, 1 )
 collision_layer = 2
 collision_mask = 0
+script = ExtResource( 2 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="HitBoxes/Cap1"]
+scale = Vector2( 1, 1 )
+z_index = 20
+frames = SubResource( 6 )
+animation = "cap1"
+playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBoxes/Cap1"]
 position = Vector2( -172.424, 134.686 )
@@ -178,10 +160,16 @@ z_index = 100
 shape = SubResource( 14 )
 
 [node name="Cap2" type="Area2D" parent="HitBoxes"]
-position = Vector2( 0.317481, 0.317481 )
 scale = Vector2( 1, 1 )
 collision_layer = 2
 collision_mask = 0
+script = ExtResource( 2 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="HitBoxes/Cap2"]
+z_index = 20
+frames = SubResource( 6 )
+animation = "cap2"
+playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBoxes/Cap2"]
 position = Vector2( -166.741, -148.306 )
@@ -191,22 +179,34 @@ z_index = 100
 shape = SubResource( 15 )
 
 [node name="Cap3" type="Area2D" parent="HitBoxes"]
-position = Vector2( 349.512, -275.193 )
 scale = Vector2( 1, 1 )
 collision_layer = 2
 collision_mask = 0
+script = ExtResource( 2 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="HitBoxes/Cap3"]
+z_index = 20
+frames = SubResource( 6 )
+animation = "cap3"
+playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBoxes/Cap3"]
-position = Vector2( -172.424, 134.686 )
+position = Vector2( 175.865, -140.925 )
 rotation = -3.85369
 z_index = 100
 shape = SubResource( 14 )
 
 [node name="Cap4" type="Area2D" parent="HitBoxes"]
-position = Vector2( 0.31748, 0.317456 )
 scale = Vector2( 1, 1 )
 collision_layer = 2
 collision_mask = 0
+script = ExtResource( 2 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="HitBoxes/Cap4"]
+z_index = 20
+frames = SubResource( 6 )
+animation = "cap4"
+playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBoxes/Cap4"]
 position = Vector2( 181.385, 128.272 )
@@ -214,13 +214,16 @@ rotation = 0.685914
 z_index = 100
 shape = SubResource( 15 )
 
-[node name="Body" type="Area2D" parent="HitBoxes"]
+[node name="Core" type="Area2D" parent="HitBoxes"]
 position = Vector2( 0.317481, 0.317481 )
 scale = Vector2( 1, 1 )
 collision_layer = 2
 collision_mask = 0
+script = ExtResource( 2 )
+health = 0
+point_value = 0
 
-[node name="CollisionShape2D" type="CollisionPolygon2D" parent="HitBoxes/Body"]
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="HitBoxes/Core"]
 position = Vector2( -74.0395, 25.3699 )
 rotation = -3.85369
 z_index = 100
@@ -240,19 +243,19 @@ wait_time = 0.15
 one_shot = true
 
 [node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
-position = Vector2( -0.298515, -2.72795 )
+position = Vector2( -4.07403, -2.72795 )
 scale = Vector2( 24.5119, 24.6126 )
 [connection signal="animation_finished" from="AnimatedSprite" to="." method="_on_AnimatedSprite_animation_finished"]
 [connection signal="animation_finished" from="AnimatedSprite/FacialExpression" to="." method="_on_AnimatedSprite_animation_finished"]
-[connection signal="animation_finished" from="AnimatedSprite/Cap1" to="." method="_on_AnimatedSprite_animation_finished"]
-[connection signal="animation_finished" from="AnimatedSprite/Cap2" to="." method="_on_AnimatedSprite_animation_finished"]
-[connection signal="animation_finished" from="AnimatedSprite/Cap3" to="." method="_on_AnimatedSprite_animation_finished"]
-[connection signal="animation_finished" from="AnimatedSprite/Cap4" to="." method="_on_AnimatedSprite_animation_finished"]
-[connection signal="area_entered" from="HitBoxes/Cap1" to="." method="_on_Area2D_area_entered"]
-[connection signal="area_entered" from="HitBoxes/Cap2" to="." method="_on_Area2D_area_entered"]
-[connection signal="area_entered" from="HitBoxes/Cap3" to="." method="_on_Area2D_area_entered"]
-[connection signal="area_entered" from="HitBoxes/Cap4" to="." method="_on_Area2D_area_entered"]
-[connection signal="area_entered" from="HitBoxes/Body" to="." method="_on_Body_area_entered"]
+[connection signal="area_entered" from="HitBoxes/Cap1" to="." method="_on_Body_area_entered" binds= [ "Cap1" ]]
+[connection signal="animation_finished" from="HitBoxes/Cap1/AnimatedSprite" to="." method="_on_AnimatedSprite_animation_finished"]
+[connection signal="area_entered" from="HitBoxes/Cap2" to="." method="_on_Body_area_entered" binds= [ "Cap2" ]]
+[connection signal="animation_finished" from="HitBoxes/Cap2/AnimatedSprite" to="." method="_on_AnimatedSprite_animation_finished"]
+[connection signal="area_entered" from="HitBoxes/Cap3" to="." method="_on_Body_area_entered" binds= [ "Cap3" ]]
+[connection signal="animation_finished" from="HitBoxes/Cap3/AnimatedSprite" to="." method="_on_AnimatedSprite_animation_finished"]
+[connection signal="area_entered" from="HitBoxes/Cap4" to="." method="_on_Body_area_entered" binds= [ "Cap4" ]]
+[connection signal="animation_finished" from="HitBoxes/Cap4/AnimatedSprite" to="." method="_on_AnimatedSprite_animation_finished"]
+[connection signal="area_entered" from="HitBoxes/Core" to="." method="_on_Core_area_entered"]
 [connection signal="timeout" from="ProjectileSpawner/CooldownTimer" to="." method="_on_CooldownTimer_timeout"]
 [connection signal="timeout" from="HitCooldownTimer" to="." method="_on_HitCooldownTimer_timeout"]
 [connection signal="timeout" from="BurstCooldownTimer" to="." method="_on_BurstCooldownTimer_timeout"]

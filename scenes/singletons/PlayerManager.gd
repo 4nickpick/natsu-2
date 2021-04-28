@@ -9,6 +9,7 @@ enum Abilities {
 }
 
 enum PowerUps {
+	NONE = 0,
 	BURST = 1,
 	BURST_ANGLED = 2,
 	HYPER = 3,
@@ -48,8 +49,8 @@ signal charge_changed(value)
 onready var shield = 100 setget set_shield
 signal shield_changed
 
-onready var powerup = null setget set_powerup
-#signal powerup_changed
+onready var powerup = PowerUps.NONE setget set_powerup
+signal powerup_changed
 
 onready var abilities = [] setget set_abilities
 #signal abilities_changed 
@@ -87,7 +88,7 @@ func set_shield(value):
 
 func set_powerup(value):
 	powerup = value
-#	emit_signal("powerup_changed", value)
+	emit_signal("powerup_changed", value)
 
 func set_abilities(value):
 	abilities = value

@@ -7,7 +7,7 @@
 [ext_resource path="res://scenes/projectiles/HyperBeam.gd" type="Script" id=5]
 [ext_resource path="res://scenes/projectiles/Beam.gd" type="Script" id=6]
 
-[sub_resource type="SpriteFrames" id=2]
+[sub_resource type="SpriteFrames" id=1]
 animations = [ {
 "frames": [ ExtResource( 2 ), ExtResource( 3 ) ],
 "loop": true,
@@ -15,7 +15,7 @@ animations = [ {
 "speed": 6.0
 } ]
 
-[sub_resource type="RectangleShape2D" id=1]
+[sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 7.35939, 54.5436 )
 
 [sub_resource type="SpriteFrames" id=3]
@@ -38,12 +38,12 @@ collision_mask = 10
 script = ExtResource( 5 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-frames = SubResource( 2 )
+frames = SubResource( 1 )
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 8.60364, 0.325256 )
-shape = SubResource( 1 )
+shape = SubResource( 2 )
 
 [node name="Beams" type="Node2D" parent="."]
 
@@ -58,6 +58,7 @@ script = ExtResource( 6 )
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Beams/Beam"]
 position = Vector2( 32.1427, -0.00658035 )
 frames = SubResource( 3 )
+frame = 1
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Beams/Beam"]
@@ -69,7 +70,7 @@ position = Vector2( 16.0867, -54.4472 )
 rect = Rect2( 0, 0, 34, 109 )
 
 [node name="BeamGeneratorTimer" type="Timer" parent="."]
-wait_time = 0.03
+wait_time = 0.015
 autostart = true
 [connection signal="screen_entered" from="Beams/Beam/VisibilityNotifier2D" to="Beams/Beam" method="_on_VisibilityNotifier2D_screen_entered"]
 [connection signal="screen_exited" from="Beams/Beam/VisibilityNotifier2D" to="Beams/Beam" method="_on_VisibilityNotifier2D_screen_exited"]

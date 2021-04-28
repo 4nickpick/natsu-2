@@ -75,11 +75,24 @@ func update_charge(value):
 #func update_rotation(value):
 ##	$HUD/HUDContainer/FooterContainer/Count.text = str(value)
 #	pass
-#
-#func update_powerup(value):
-##	$HUDContainer/FooterContainer/Health.text = "Health: " + str(health) 
-#	pass
-#
+
+func update_powerup(value):
+	var labelText = "None"
+	match value:
+		PlayerManager.PowerUps.NONE:
+			labelText = "None"
+		PlayerManager.PowerUps.HYPER:
+			labelText = "Hyper Beam"
+		PlayerManager.PowerUps.BOMB:
+			labelText = "Bomb"
+		PlayerManager.PowerUps.BURST:
+			labelText = "Burst"
+		PlayerManager.PowerUps.BURST_ANGLED:
+			labelText = "Burst v2"	
+				
+	countUI.text = "Powerup: " + labelText 
+	pass
+
 #func update_abilities(value):
 ##	$HUDContainer/FooterContainer/Health.text = "Health: " + str(health) 
 #	pass
@@ -109,7 +122,7 @@ func _ready():
 	_error = PlayerManager.connect("charge_changed", self, "update_charge")
 	_error = PlayerManager.connect("lives_changed", self, "update_lives")
 	_error = PlayerManager.connect("died", self, "game_over_menu_show")
-#	_error = PlayerManager.connect("powerup_changed", self, "update_powerup")
+	_error = PlayerManager.connect("powerup_changed", self, "update_powerup")
 #	_error = PlayerManager.connect("abilities_changed", self, "update_abilities")
 #	PlayerManager.connect("rotation_changed", self, "update_rotation")
 	
@@ -130,6 +143,12 @@ func _input(event):
 				pause_menu_hide()
 				get_tree().paused = false
 
+func _notification(what):
+	if what == MainLoop.NOTIFICATION_WM_FOCUS_OUT:
+		if PlayerManager.health > 0 and LevelManager.level_state == LevelManager.LevelState.RUNNING:
+			if get_tree().paused == false:
+				get_tree().paused = true
+				pause_menu_show()
 
 func _on_UnpauseButton_pressed():
 	pause_menu_hide()

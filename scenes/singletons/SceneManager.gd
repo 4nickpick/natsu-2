@@ -16,6 +16,9 @@ signal loading_completed
 func _ready():
 	pass
 	
+func getViewport():
+	return viewport
+	
 func setViewport(value):
 	viewport = value
 	current_scene = viewport.get_child(viewport.get_child_count()-1)
