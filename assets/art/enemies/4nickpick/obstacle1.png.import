@@ -1,0 +1,13 @@
+[remap]
+
+importer="image"
+type="Image"
+path="res://.import/obstacle1.png-f1c3ee4a7efe2525c28cddcce2e7d2e4.image"
+
+[deps]
+
+source_file="res://assets/art/enemies/4nickpick/obstacle1.png"
+dest_files=[ "res://.import/obstacle1.png-f1c3ee4a7efe2525c28cddcce2e7d2e4.image" ]
+
+[params]
+

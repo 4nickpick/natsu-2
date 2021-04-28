@@ -451,6 +451,9 @@ func _on_Area2D_area_entered(area):
 			var newPosition = position + (position - area.position).normalized() * 100  
 			$HitBoxes/KnockbackTween.interpolate_property(self, "position", null, newPosition, .01, Tween.TRANS_LINEAR, Tween.EASE_OUT)	
 			$HitBoxes/KnockbackTween.start()
+	
+	elif area.is_in_group("obstacles"):
+		take_damage(9999)
 		
 
 func _on_ActiveHitBox_area_entered(area):

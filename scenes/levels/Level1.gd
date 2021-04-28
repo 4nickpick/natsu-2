@@ -5,6 +5,8 @@ const Enemy = preload("res://scenes/actors/Enemy.tscn")
 const BigEnemy = preload("res://scenes/actors/BigEnemy.tscn")
 const Golem = preload("res://scenes/actors/Golem.tscn")
 const Boss = preload("res://scenes/actors/Boss.tscn")
+const Obstacle1 = preload("res://scenes/actors/Obstacle.tscn")
+const Obstacle2 = preload("res://scenes/actors/Obstacle2.tscn")
 
 # camera management
 var path: PoolVector2Array
@@ -60,6 +62,19 @@ func _ready():
 			dialogueHeader.dialogues.push_back(dialogue)
 		triggers[spawn_trigger].push_back(dialogueHeader)
 		
+	for obstacle in level_data["obstacles"]:
+		var spawn_trigger = Vector2(
+			obstacle["spawn_trigger"]["x"] * speed, 
+			obstacle["spawn_trigger"]["y"] * speed
+		)
+		
+		if !triggers.has(spawn_trigger):
+			triggers[spawn_trigger] = []
+			
+		var header = ObstacleInstanceHeader.new()
+		header.type = obstacle["type"]
+		header.flipped = obstacle["flipped"]
+		triggers[spawn_trigger].push_back(header)
 		
 	for enemy_data in level_data["enemies"]:
 		if !enemy_data["enabled"]:
@@ -163,6 +178,8 @@ func process_triggers():
 				spawn_enemy_from_instance_header(trigger)
 			if trigger is BossInstanceHeader:
 				spawn_boss_from_instance_header(trigger)
+			if trigger is ObstacleInstanceHeader:
+				spawn_obstacle_from_instance_header(trigger)
 			elif trigger is DialogueHeader:
 				initiate_dialogue_from_header(trigger)
 				
@@ -191,6 +208,25 @@ func spawn_boss_from_instance_header(instance_header):
 		"KingCrab":
 			enemy = Boss.instance()
 	$Camera2D/Enemies/YSort.add_child(enemy)
+	
+func spawn_obstacle_from_instance_header(instance_header):
+	var obstacle = null
+	if instance_header.type == 1:
+		obstacle = Obstacle1.instance()
+		obstacle.position = Vector2(2500, 400)
+		if instance_header.flipped:
+			obstacle.position.y = 400
+			obstacle.scale = Vector2(1, -1)
+	else:
+		obstacle = Obstacle2.instance()
+		obstacle.position = Vector2(2500, 510)
+		if instance_header.flipped:
+			obstacle.position.y = 300
+			obstacle.scale = Vector2(1, -1)
+			
+	obstacle.velocity = Vector2(-speed, 0)
+			
+	$Camera2D/Enemies/YSort.add_child(obstacle)
 	
 func initiate_dialogue_from_header(header):
 	var _dialogue = $CanvasLayer.show_message(header.dialogues[0].speech)

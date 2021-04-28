@@ -38,6 +38,11 @@ _global_script_classes=[ {
 "class": "EnemyInstancePathBehavior",
 "language": "GDScript",
 "path": "res://scripts/EnemyInstancePathBehavior.gd"
+}, {
+"base": "Resource",
+"class": "ObstacleInstanceHeader",
+"language": "GDScript",
+"path": "res://scripts/ObstacleInstanceHeader.gd"
 } ]
 _global_script_class_icons={
 "BossInstanceHeader": "",
@@ -45,7 +50,8 @@ _global_script_class_icons={
 "DialogueHeader": "",
 "DialogueLine": "",
 "EnemyInstanceHeader": "",
-"EnemyInstancePathBehavior": ""
+"EnemyInstancePathBehavior": "",
+"ObstacleInstanceHeader": ""
 }
 
 [application]
@@ -156,6 +162,8 @@ player_action3={
 2d_physics/layer_4="enemy_projectiles"
 2d_render/layer_5="boundaries"
 2d_physics/layer_5="boundaries"
+2d_render/layer_6="obstacles"
+2d_physics/layer_6="obstacles"
 
 [rendering]
 
